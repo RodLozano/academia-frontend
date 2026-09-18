@@ -1,1 +1,165 @@
-# frontend_academia
+# AcademIA — frontend
+
+Frontend de **AcademIA**, una plataforma educativa con IA para profesores, alumnos e instituciones. El sistema ingiere los materiales del centro (PDFs) y, mediante RAG sobre ese corpus, genera exámenes, rúbricas y fichas con **linaje** a los documentos originales de los que salen. La IA propone; **el humano decide**.
+
+> **Estado:** fase 0 — solo las pantallas públicas, sin backend ni datos reales. El contenido de las pantallas (cifras, testimonios, textos legales, nombres) es **provisional** y proviene de las maquetas de diseño; no describe un producto en producción.
+
+- Sitio desplegado: <https://rodlozano.github.io/frontend_academia/>
+- Sistema visual: [DESIGN.md](DESIGN.md)
+- Inventario de páginas: [docs/inventario-pantallas.md](docs/inventario-pantallas.md)
+- Maquetas de referencia: [docs/design-refs/](docs/design-refs/), una carpeta por consola
+
+## Arquitectura: una PWA, cuatro lentes
+
+AcademIA es **una sola aplicación web responsive (PWA)**, no cuatro apps. Las cuatro "consolas" son *lentes* sobre una misma espina de datos (el corpus RAG) y un mismo código base; qué ve cada persona depende de su rol.
+
+| Consola | Quién | Papel |
+|---|---|---|
+| 0 · Pública | Cualquiera, sin autenticar | Captación: landing, solicitud de piloto, login, legal |
+| 1 · Profesor | Docentes | Landing por defecto tras el login. Núcleo del piloto: generar, corregir, asignaturas, clases |
+| 2 · Institución | Dirección / jefatura | Lo que hacen los profesores, en agregado + gobierno (usuarios, consumo) |
+| 3 · Alumno | Estudiantes | Profundidad anclada al corpus de su clase y a las rúbricas de su profesor, no chat abierto |
+
+Principios que condicionan la UI (detalle en el inventario):
+
+- La **asignatura organiza todo**: materiales, generados, clases y evaluación cuelgan de ella.
+- Los contenidos tienen **doble naturaleza**: *originales* (fuente) y *generados* (salidas de IA con linaje a sus originales).
+- **Toda evaluación termina en un paso humano** ("confirmar nota").
+- Las tres consolas privadas comparten una **carcasa común** (barra superior con selector de asignatura, buscador sobre el corpus, menú de usuario, avisos). La consola pública no la usa.
+
+El **backend** (FastAPI, LangGraph, Qdrant y Ollama sobre AWS) ya existe y **no forma parte de este repositorio**. El frontend lo consumirá bajo `/api/*` en fases posteriores.
+
+## Identidad visual
+
+La fuente de verdad es [DESIGN.md](DESIGN.md). Resumen de lo que el código debe respetar:
+
+- **La paleta codifica la tesis del producto.**
+  - **Teal (`--primary`, `--brand`) = el sistema / la IA.** Marca, navegación, acciones normales.
+  - **Naranja (`--human`) = la decisión humana.** Se usa **solo** en acciones que confirma un humano y son irreversibles: confirmar nota, publicar, validar una salida de IA. Si aparece en una pantalla sin decisión humana es un error de diseño.
+  - **Neutros cálidos (stone)**, no grises fríos, para sesiones largas.
+- Un solo `primary` (teal) por vista.
+- **Modo oscuro obligatorio**, con sus propios valores de token.
+- Tipografía: **Inter** (interfaz y datos), **serif** (Source Serif 4) solo en titulares de marketing, **mono** (JetBrains Mono) para IDs, versiones y linaje. Pesos 400 y 500 en la UI.
+- Densidad cómoda-compacta: base 4px, control de 40px (32px compacto), radio 8px en controles y 12px en tarjetas, bordes finos antes que sombras.
+- Sentence case en todo. Los componentes consumen **tokens**, nunca hex sueltos; un token nuevo se añade primero a DESIGN.md.
+
+Los nombres de token de DESIGN.md coinciden con los de shadcn/ui (`--background`, `--primary`, `--ring`…), más `--brand`, `--human`, `--success` y `--warning` como extensiones propias. Viven en [src/styles/globals.css](src/styles/globals.css) y se exponen a Tailwind desde el bloque `@theme`, así que los componentes usan `bg-primary` o `text-human` y nunca un hex.
+
+## Stack
+
+| Capa | Elección |
+|---|---|
+| Build | Vite |
+| UI | React + TypeScript |
+| Estilos | Tailwind CSS, con los tokens de DESIGN.md cableados en el tema |
+| Componentes | shadcn/ui (código propio en `src/components/ui`) |
+| Rutas | React Router con `HashRouter` |
+| Despliegue (ahora) | GitHub Pages, repo público, GitHub Actions + `actions/deploy-pages` |
+
+Consecuencias del despliegue en GitHub Pages:
+
+- `base: '/frontend_academia/'` en `vite.config`. Los assets estáticos se referencian con `import.meta.env.BASE_URL`, nunca con rutas absolutas.
+- **`HashRouter`**, porque Pages no reescribe rutas: las URLs son `…/frontend_academia/#/login`. Por lo mismo, los anclajes internos de una página no pueden usar `#seccion`.
+- Es un repo público: **nada de secretos, claves ni datos reales** en el código, en el historial ni en variables `VITE_*` (todo lo que empieza por `VITE_` acaba en el bundle).
+
+## Pipeline de trabajo
+
+El diseño viaja como contrato por toda la cadena, y cada eslabón produce lo que consume el siguiente:
+
+```
+Stitch  →  Figma  →  v0 / shadcn  →  Claude Code  →  GitHub Actions  →  GitHub Pages
+(explora)  (afina)   (componentes)   (integra)       (build + deploy)   (publica)
+```
+
+- [DESIGN.md](DESIGN.md) define **tokens, no páginas**, y es lo que mantiene coherentes todas las herramientas.
+- [docs/inventario-pantallas.md](docs/inventario-pantallas.md) define **qué páginas existen** y cuáles entran en v1.
+- [docs/design-refs/](docs/design-refs/) contiene las maquetas, en una carpeta por consola. Son **referencia visual, no especificación**: donde una maqueta contradice DESIGN.md, gana DESIGN.md.
+- Todo push a `main` construye y despliega. El objetivo de esta fase es validar esta cadena de punta a punta antes de invertir en pantallas más complejas.
+
+## Alcance de esta fase
+
+Solo la **consola pública** (5 rutas de v1 en el inventario, sin contar callback SSO):
+
+| Ruta | Pantalla | Inventario | Referencia |
+|---|---|---|---|
+| `/` | Landing / propuesta de valor | 0.1 | [landing.png](docs/design-refs/consola%20publica/landing.png) |
+| `/piloto` | Solicitud de piloto | 0.2 | [piloto.png](docs/design-refs/consola%20publica/piloto.png) |
+| `/login` | Acceso al campus | 0.3 | [login.png](docs/design-refs/consola%20publica/login.png) |
+| `/recuperar` | Recuperación de contraseña (misma estructura que el login) | 0.4 | derivada del login |
+| `/legal`, `/legal/:seccion` | Legal: privacidad, términos, DPA y AI Act | 0.5 | [legal.png](docs/design-refs/consola%20publica/legal.png) |
+
+**Dentro:** las cinco pantallas responsive, modo claro y oscuro, tokens de DESIGN.md, validación de formularios en cliente, despliegue automático en Pages.
+
+**Fuera (no se hace en esta fase):**
+
+- Carcasa de app y consolas de profesor, institución y alumno.
+- Backend: los formularios **no envían nada**; el login **no autentica**. Sin llamadas de red y sin datos reales.
+- Plugin PWA (manifest, service worker, instalabilidad).
+- Callback SSO, páginas 0.6 y 0.7, selector de idioma y aviso de cookies.
+
+## Roadmap
+
+1. **Fase 0 — Pantallas públicas** *(esta fase)*. Valida diseño → código → despliegue.
+2. **Fase 1 — Núcleo generativo con backend.** Carcasa común, autenticación real, consola del profesor (asignaturas, ingesta de PDFs, generación con linaje, corrección con "confirmar nota") consumiendo `/api/*`. Aquí entra el plugin PWA.
+3. **Fase 2 — Instituciones y alumno.** Consola de institución (dashboard, usuarios y roles, consumo) y consola del alumno (inicio, tutor, práctica, tareas), según la columna v1 del inventario.
+4. **Migración a AWS.** Del despliegue en GitHub Pages a **S3 + CloudFront** junto al backend. Con dominio propio y reescritura de rutas desde CloudFront se podrá pasar de `HashRouter` a `BrowserRouter` y retirar `base: '/frontend_academia/'`. Esta migración es la razón para no acoplar el código a la URL de Pages.
+
+## Estructura
+
+```
+frontend_academia/
+├── .github/workflows/deploy.yml   # build + actions/deploy-pages
+├── docs/                          # inventario de pantallas y maquetas
+├── src/
+│   ├── main.tsx                   # entrada: fuentes, HashRouter, ThemeProvider
+│   ├── app/routes.tsx             # tabla de rutas y vuelta al inicio al navegar
+│   ├── styles/globals.css         # tokens de DESIGN.md (claro/oscuro) + tema Tailwind
+│   ├── components/
+│   │   ├── ui/                    # shadcn/ui: button, input, select, card…
+│   │   ├── brand/                 # logo, vista previa del producto, franja de demo
+│   │   ├── form/                  # campo con etiqueta/pista/error, aviso de envío
+│   │   ├── site-header.tsx        # navegación de marketing
+│   │   ├── site-footer.tsx        # pie completo y pie reducido
+│   │   ├── scroll-to-section.tsx  # desplazamiento en la misma página
+│   │   └── theme-toggle.tsx       # sistema → claro → oscuro
+│   ├── layouts/                   # PublicLayout, AuthLayout
+│   ├── pages/                     # landing, piloto, login, recuperar, legal, 404
+│   ├── content/                   # textos provisionales por pantalla
+│   └── lib/                       # cn(), asset(), contexto y proveedor de tema
+├── DESIGN.md
+├── components.json                # configuración de shadcn
+├── vite.config.ts
+└── README.md
+```
+
+Las pantallas no llevan textos incrustados: cada una lee su contenido de `src/content/`. Cuando llegue el backend, lo que sea dato real se sustituye ahí sin tocar la maquetación.
+
+## Decisiones de esta fase
+
+Puntos donde el código se aparta de las maquetas, y por qué:
+
+- **Sin naranja accionable.** Las maquetas pintan en naranja los botones de «solicitar piloto». En la consola pública no hay ninguna decisión humana irreversible, así que todos los controles van en teal. El naranja aparece **una sola vez**, dentro de la vista previa del producto, representando el botón de «confirmar nota», con una leyenda que enseña el código de color. Es la tesis del producto, y la landing existe para explicarla.
+- **Un solo formulario de piloto.** La maqueta de la landing incrusta el formulario completo. Aquí la landing cierra con una llamada a la acción que lleva a `/piloto`, que es el formulario canónico: un único esquema de validación en lugar de dos.
+- **Vista previa en vez de foto.** El hero de la maqueta usa una fotografía. El código construye un cuaderno de evaluación con los tokens, así que la vista previa sigue siendo coherente cuando cambie un token y no hay que producir una imagen.
+- **Login sin carcasa.** La maqueta muestra el acceso dentro de la barra del profesor (selector de asignatura, avisos, usuario). Quien aún no ha entrado no tiene ninguna de esas cosas, así que es una tarjeta centrada.
+- **Contenido de maqueta señalado.** Franja permanente en todas las pantallas, `noindex` en el HTML, aviso propio en la cabecera del documento legal y una etiqueta de «contenido de ejemplo» sobre los testimonios.
+- **Secciones legales como ruta** (`/legal/ai-act`), no como ancla: con `HashRouter` el `#` de la URL lo consume el router. Por lo mismo, la navegación de la landing usa botones de desplazamiento en lugar de enlaces con `#`.
+
+## Desarrollo
+
+Requisitos: Node 20+ y npm.
+
+```bash
+npm install
+npm run dev        # servidor de desarrollo en /frontend_academia/
+npm run build      # typecheck + build de producción en dist/
+npm run preview    # sirve dist/ con el mismo base que Pages
+npm run lint
+npm run typecheck
+```
+
+`npm run dev` sirve en `http://localhost:5173/frontend_academia/`. Al revisar una pantalla, compararla con su PNG de `docs/design-refs/` **en claro y en oscuro**, y a 1280px y 400px de ancho.
+
+## Publicación en GitHub Pages
+
+El workflow se dispara con cada push a `main` y también a mano desde la pestaña Actions. Para que funcione, en el repositorio: **Settings → Pages → Source: GitHub Actions**.
