@@ -147,7 +147,7 @@ Puntos donde el código se aparta de las maquetas, y por qué:
 
 ## Desarrollo
 
-Requisitos: Node 20+ y npm.
+Requisitos: la versión de Node que indica [.nvmrc](.nvmrc) y npm. El CI lee ese mismo archivo, así que local y pipeline compilan siempre en la misma versión.
 
 ```bash
 npm install

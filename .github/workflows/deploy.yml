@@ -24,7 +24,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # La versión la manda .nvmrc, para que local y CI no se separen.
+          node-version-file: .nvmrc
           cache: npm
 
       - run: npm ci
