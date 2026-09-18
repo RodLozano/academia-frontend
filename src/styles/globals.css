@@ -1,0 +1,211 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Tokens de DESIGN.md. Los componentes consumen SOLO estos tokens vía
+   utilidades de Tailwind (bg-primary, text-human...), nunca hex sueltos.
+   Los tokens marcados "derivado" no están en la tabla de DESIGN.md: los pide
+   shadcn/ui y se han deducido de la misma familia. Están documentados en la
+   sección "Tokens derivados" de DESIGN.md.
+--------------------------------------------------------------------------- */
+
+@custom-variant dark (&:is(.dark, .dark *));
+
+:root {
+  --background: #fafaf9; /* stone-50 */
+  --foreground: #1c1917; /* stone-900 */
+  --card: #ffffff;
+  --card-foreground: #1c1917; /* derivado */
+  --popover: #ffffff; /* derivado */
+  --popover-foreground: #1c1917; /* derivado */
+  --muted: #f5f5f4;
+  --muted-foreground: #57534e; /* stone-600 */
+  --secondary: #f5f5f4; /* derivado */
+  --secondary-foreground: #1c1917; /* derivado */
+  --border: #e7e5e4; /* stone-200 */
+  --input: #e7e5e4;
+  --accent: #f5f5f4; /* superficie de hover neutra, NO marca */
+  --accent-foreground: #1c1917; /* derivado */
+  --primary: #0f766e; /* teal-700 — el sistema / la IA */
+  --primary-foreground: #ffffff;
+  --brand: #0f766e;
+  --brand-foreground: #ffffff; /* derivado */
+  --human: #c2410c; /* orange-700 — la decisión humana */
+  --human-foreground: #ffffff;
+  --ring: #0f766e;
+  --success: #15803d; /* green-700 */
+  --success-foreground: #ffffff; /* derivado */
+  --warning: #ca8a04; /* yellow-600 */
+  --warning-foreground: #1c1917; /* derivado: texto oscuro encima */
+  --destructive: #b91c1c; /* red-700 */
+  --destructive-foreground: #ffffff; /* derivado */
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: #1c1917;
+  --foreground: #fafaf9;
+  --card: #292524;
+  --card-foreground: #fafaf9; /* derivado */
+  --popover: #292524; /* derivado */
+  --popover-foreground: #fafaf9; /* derivado */
+  --muted: #292524;
+  --muted-foreground: #a8a29e;
+  --secondary: #292524; /* derivado */
+  --secondary-foreground: #fafaf9; /* derivado */
+  --border: #44403c;
+  --input: #44403c; /* derivado */
+  --accent: #44403c; /* derivado: stone-700, hover visible sobre card */
+  --accent-foreground: #fafaf9; /* derivado */
+  --primary: #2dd4bf; /* teal-400 */
+  --primary-foreground: #06302b;
+  --brand: #2dd4bf; /* derivado */
+  --brand-foreground: #06302b; /* derivado */
+  --human: #fb923c; /* orange-400 */
+  --human-foreground: #431407;
+  --ring: #2dd4bf; /* derivado */
+  --success: #4ade80;
+  --success-foreground: #052e16; /* derivado */
+  --warning: #facc15;
+  --warning-foreground: #1c1917; /* derivado */
+  --destructive: #f87171;
+  --destructive-foreground: #450a0a; /* derivado */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-human: var(--human);
+  --color-human-foreground: var(--human-foreground);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Radio: 8px en controles (rounded-lg), 12px en tarjetas (rounded-xl). */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Inter para interfaz y datos; serif solo en titulares de marketing;
+     mono para IDs, versiones y linaje. */
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Source Serif 4 Variable', ui-serif, Georgia, Cambria,
+    'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular,
+    Menlo, Consolas, monospace;
+
+  /* Escala de la app — base 14px (DESIGN.md). */
+  --text-xs: 0.75rem; /* 12 / 16 */
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.8125rem; /* 13 / 18 */
+  --text-sm--line-height: 1.125rem;
+  --text-base: 0.875rem; /* 14 / 20 */
+  --text-base--line-height: 1.25rem;
+  --text-lg: 1rem; /* 16 / 24 */
+  --text-lg--line-height: 1.5rem;
+  --text-xl: 1.125rem; /* 18 / 26 */
+  --text-xl--line-height: 1.625rem;
+  --text-2xl: 1.25rem; /* 20 / 28 */
+  --text-2xl--line-height: 1.75rem;
+  --text-3xl: 1.5rem; /* 24 / 32 */
+  --text-3xl--line-height: 2rem;
+
+  /* Escala de marketing — aparte y mayor (DESIGN.md). */
+  --text-display-sm: 1.75rem; /* 28 / 36 */
+  --text-display-sm--line-height: 2.25rem;
+  --text-display-md: 2.25rem; /* 36 / 44 */
+  --text-display-md--line-height: 2.75rem;
+  --text-display-lg: 3rem; /* 48 / 56 */
+  --text-display-lg--line-height: 3.5rem;
+  --text-display-xl: 3.75rem; /* 60 / 66 */
+  --text-display-xl--line-height: 4.125rem;
+
+  /* Dos niveles de sombra como máximo: panel y popover. Suaves, sin glow. */
+  --shadow-panel: 0 1px 2px 0 rgb(28 25 23 / 0.04),
+    0 1px 3px 0 rgb(28 25 23 / 0.06);
+  --shadow-popover: 0 4px 6px -1px rgb(28 25 23 / 0.07),
+    0 10px 20px -5px rgb(28 25 23 / 0.1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans text-base antialiased;
+    /* La UI vive en 400/500. Nada de 600/700 fuera de .font-display. */
+    font-weight: 400;
+  }
+
+  /* Los titulares heredan el peso del contenedor: el peso se decide en cada
+     sitio, no por el nivel de encabezado. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: inherit;
+  }
+
+  /* El anclaje de las secciones legales cae bajo la cabecera pegajosa. */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
+  ::selection {
+    @apply bg-primary/20;
+  }
+}
+
+@layer components {
+  /* Titular de marketing. Único sitio donde se permite peso 600, y solo
+     en serif (DESIGN.md — la escala de marketing es aparte). */
+  .font-display {
+    @apply font-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* Etiqueta de sección de marketing: teal en versalitas. */
+  .eyebrow {
+    @apply text-primary text-xs font-medium tracking-[0.12em] uppercase;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

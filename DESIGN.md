@@ -107,6 +107,40 @@ La escala de marketing es aparte y mayor.
 - Preferir bordes de 0.5px sobre sombras. Máximo dos niveles de sombra
   (panel, popover). Sombras suaves, nunca glow ni degradados.
 
+## Tokens derivados
+
+shadcn/ui pide pares `*-foreground` y superficies que no estaban en las tablas
+de arriba. No son decisiones nuevas de diseño: se deducen de la misma familia
+de la que cuelgan. Se listan aquí porque ningún token puede vivir solo en el
+código.
+
+| Token | Claro | Oscuro | Se deduce de |
+|---|---|---|---|
+| `--card-foreground` | `#1C1917` | `#FAFAF9` | igual que `--foreground` |
+| `--popover` | `#FFFFFF` | `#292524` | igual que `--card` |
+| `--popover-foreground` | `#1C1917` | `#FAFAF9` | igual que `--foreground` |
+| `--secondary` | `#F5F5F4` | `#292524` | igual que `--muted` |
+| `--secondary-foreground` | `#1C1917` | `#FAFAF9` | igual que `--foreground` |
+| `--accent-foreground` | `#1C1917` | `#FAFAF9` | igual que `--foreground` |
+| `--brand-foreground` | `#FFFFFF` | `#06302B` | igual que `--primary-foreground` |
+| `--success-foreground` | `#FFFFFF` | `#052E16` | par legible sobre `--success` |
+| `--warning-foreground` | `#1C1917` | `#1C1917` | «texto oscuro encima» |
+| `--destructive-foreground` | `#FFFFFF` | `#450A0A` | par legible sobre `--destructive` |
+| `--input` (oscuro) | — | `#44403C` | igual que `--border` |
+| `--ring` (oscuro) | — | `#2DD4BF` | igual que `--primary` |
+| `--brand` (oscuro) | — | `#2DD4BF` | igual que `--primary` |
+| `--accent` (oscuro) | — | `#44403C` | stone-700: en oscuro, `--muted` coincide con `--card` y el hover sería invisible |
+
+Consecuencia de `--warning-foreground`: el amarillo solo se usa **lleno**, con
+texto oscuro encima. Un `--warning` translúcido con ese texto no contrasta en
+modo oscuro.
+
+## Peso en marketing
+
+La regla de dos pesos (400 y 500) rige la **UI**. Los titulares de marketing en
+serif usan **600**, y solo ellos: es la única excepción, va atada a la clase
+`.font-display` y no entra en la app.
+
 ## Reglas de uso
 
 1. Un solo primary (teal) por vista.
