@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Los checks corren también en los PR, sin desplegar: así una rama llega a
+  # main ya verificada en vez de verificarse mientras se publica.
+  pull_request:
+    branches: [main]
   # Permite lanzar el despliegue a mano desde la pestaña Actions.
   workflow_dispatch:
 
@@ -34,14 +38,19 @@ jobs:
 
       - run: npm run build
 
+      # Solo al desplegar: en un PR no hay nada que publicar, y Pages
+      # rechazaría la configuración desde una rama.
       - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
 
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
         with:
           path: dist
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pages: write
