@@ -38,6 +38,7 @@
   --warning-foreground: #1c1917; /* derivado: texto oscuro encima */
   --destructive: #b91c1c; /* red-700 */
   --destructive-foreground: #ffffff; /* derivado */
+  --overlay: rgb(28 25 23 / 0.45); /* velo de modal */
   --radius: 0.5rem;
 }
 
@@ -69,6 +70,8 @@
   --warning-foreground: #1c1917; /* derivado */
   --destructive: #f87171;
   --destructive-foreground: #450a0a; /* derivado */
+  /* El fondo oscuro ya es stone-900: el velo tiene que ser más oscuro que él. */
+  --overlay: rgb(0 0 0 / 0.65);
 }
 
 @theme inline {
@@ -99,6 +102,7 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-overlay: var(--overlay);
 
   /* Radio: 8px en controles (rounded-lg), 12px en tarjetas (rounded-xl). */
   --radius-sm: calc(var(--radius) - 4px);

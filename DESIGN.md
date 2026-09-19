@@ -129,6 +129,7 @@ código.
 | `--input` (oscuro) | — | `#44403C` | igual que `--border` |
 | `--ring` (oscuro) | — | `#2DD4BF` | igual que `--primary` |
 | `--brand` (oscuro) | — | `#2DD4BF` | igual que `--primary` |
+| `--overlay` | `rgb(28 25 23 / 0.45)` | `rgb(0 0 0 / 0.65)` | velo de modal; en oscuro el fondo ya es stone-900, así que un velo de ese tono no oscurecería nada |
 | `--accent` (oscuro) | — | `#44403C` | stone-700: en oscuro, `--muted` coincide con `--card` y el hover sería invisible |
 
 Consecuencia de `--warning-foreground`: el amarillo solo se usa **lleno**, con
