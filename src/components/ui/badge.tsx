@@ -14,6 +14,7 @@ const badgeVariants = cva(
         // Naranja solo donde hay decisión humana. Ver button.tsx.
         human: 'border-transparent bg-human/10 text-human',
         success: 'border-transparent bg-success/10 text-success',
+        destructive: 'border-transparent bg-destructive/10 text-destructive',
         // Sólido, no translúcido: --warning-foreground es oscuro en ambos
         // modos (DESIGN.md: "texto oscuro encima"), así que solo contrasta
         // sobre el amarillo lleno.
