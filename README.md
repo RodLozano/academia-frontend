@@ -2,7 +2,9 @@
 
 Frontend de **AcademIA**, una plataforma educativa con IA para profesores, alumnos e instituciones. El sistema ingiere los materiales del centro (PDFs) y, mediante RAG sobre ese corpus, genera exámenes, rúbricas y fichas con **linaje** a los documentos originales de los que salen. La IA propone; **el humano decide**.
 
-> **Estado:** fase 0 — solo las pantallas públicas, sin backend ni datos reales. El contenido de las pantallas (cifras, testimonios, textos legales, nombres) es **provisional** y proviene de las maquetas de diseño; no describe un producto en producción.
+> **Estado:** maqueta navegable de las **40 rutas** del inventario, sin backend. Nada de lo que se ve es real: ni las personas, ni las calificaciones, ni los textos legales, ni las cifras. Los formularios validan pero no envían, y el acceso no autentica.
+>
+> Y una advertencia para quien revise: **16 de las pantallas se construyeron sin consultar su maqueta**, por una decisión explícita de priorizar cobertura sobre fidelidad. Cuáles son, y el resto de decisiones tomadas sin supervisión, está en [docs/decisiones-fase-1.md](docs/decisiones-fase-1.md).
 
 - Sitio desplegado: <https://rodlozano.github.io/frontend_academia/>
 - Sistema visual: [DESIGN.md](DESIGN.md)
@@ -76,33 +78,39 @@ Stitch  →  Figma  →  v0 / shadcn  →  Claude Code  →  GitHub Actions  →
 - [docs/design-refs/](docs/design-refs/) contiene las maquetas, en una carpeta por consola. Son **referencia visual, no especificación**: donde una maqueta contradice DESIGN.md, gana DESIGN.md.
 - Todo push a `main` construye y despliega. El objetivo de esta fase es validar esta cadena de punta a punta antes de invertir en pantallas más complejas.
 
-## Alcance de esta fase
+## Qué hay construido
 
-Solo la **consola pública** (5 rutas de v1 en el inventario, sin contar callback SSO):
+Las 40 rutas del inventario, en cuatro consolas sobre una sola carcasa.
 
-| Ruta | Pantalla | Inventario | Referencia |
-|---|---|---|---|
-| `/` | Landing / propuesta de valor | 0.1 | [landing.png](docs/design-refs/consola%20publica/landing.png) |
-| `/piloto` | Solicitud de piloto | 0.2 | [piloto.png](docs/design-refs/consola%20publica/piloto.png) |
-| `/login` | Acceso al campus | 0.3 | [login.png](docs/design-refs/consola%20publica/login.png) |
-| `/recuperar` | Recuperación de contraseña (misma estructura que el login) | 0.4 | derivada del login |
-| `/legal`, `/legal/:seccion` | Legal: privacidad, términos, DPA y AI Act | 0.5 | [legal.png](docs/design-refs/consola%20publica/legal.png) |
+| Consola | Rutas | Qué cubre |
+|---|---|---|
+| **0 · Pública** | 7 | Portada, cómo funciona, para centros, solicitud de piloto, acceso, recuperación y el centro legal |
+| **1 · Profesor** | 15 | Asignaturas, corpus con linaje, generadores, bandeja de evaluación, corrección, cuaderno, clases, fichas, coordinación y ajustes |
+| **2 · Institución** | 9 | Dashboard, usuarios, consumo, políticas, analítica, alertas, coordinación, auditoría y configuración |
+| **3 · Alumno** | 8 | Inicio, tutor, práctica, tareas, mapa de dominio, materiales, autoevaluación y portfolio |
 
-**Dentro:** las cinco pantallas responsive, modo claro y oscuro, tokens de DESIGN.md, validación de formularios en cliente, despliegue automático en Pages.
+Las tres consolas privadas comparten una carcasa de cuatro niveles —barra global con selector de asignatura y buscador del corpus, pestañas de módulo, secciones en la lateral y contenido—, y cada pantalla se carga en su propio trozo.
 
-**Fuera (no se hace en esta fase):**
+**Lo que sostiene el conjunto**, y es lo que hay que preservar al tocar cualquier cosa:
 
-- Carcasa de app y consolas de profesor, institución y alumno.
-- Backend: los formularios **no envían nada**; el login **no autentica**. Sin llamadas de red y sin datos reales.
-- Plugin PWA (manifest, service worker, instalabilidad).
-- Callback SSO, páginas 0.6 y 0.7, selector de idioma y aviso de cookies.
+- **La regla del naranja.** Hay exactamente cuatro controles naranjas en las 40 rutas, y los cuatro son actos humanos irreversibles: confirmar nota y firmar acta, ratificar y volcar a actas, ratificar y publicar al campus, y adoptar un generado como propio. No debe haber un quinto.
+- **La doble naturaleza del contenido.** El inventario filtra por ella, el detalle muestra el linaje en las dos direcciones, y el espacio de generación obliga a elegir las fuentes antes de generar.
+- **La propuesta nunca se confunde con la nota.** En el cuaderno cada celda declara su procedencia; en la bandeja y en la corrección, la nota sugerida y la firmada no comparten presentación.
+
+**Lo que no hay:**
+
+- **Backend.** Ninguna pantalla hace una petición de red. Los datos vienen de `src/mocks/`.
+- **Autenticación.** El acceso es una maqueta y las consolas privadas no están protegidas.
+- **Plugin PWA** (manifest, service worker, instalabilidad).
+- **Verificación visual.** El código es coherente y compila, pero ninguna pantalla se ha revisado renderizada en un navegador.
 
 ## Roadmap
 
-1. **Fase 0 — Pantallas públicas** *(esta fase)*. Valida diseño → código → despliegue.
-2. **Fase 1 — Núcleo generativo con backend.** Carcasa común, autenticación real, consola del profesor (asignaturas, ingesta de PDFs, generación con linaje, corrección con "confirmar nota") consumiendo `/api/*`. Aquí entra el plugin PWA.
-3. **Fase 2 — Instituciones y alumno.** Consola de institución (dashboard, usuarios y roles, consumo) y consola del alumno (inicio, tutor, práctica, tareas), según la columna v1 del inventario.
-4. **Migración a AWS.** Del despliegue en GitHub Pages a **S3 + CloudFront** junto al backend. Con dominio propio y reescritura de rutas desde CloudFront se podrá pasar de `HashRouter` a `BrowserRouter` y retirar `base: '/frontend_academia/'`. Esta migración es la razón para no acoplar el código a la URL de Pages.
+1. ~~**Fase 0 — Pantallas públicas.**~~ Hecha. Validó diseño → código → despliegue.
+2. ~~**Maqueta completa.**~~ Hecha: las 40 rutas navegables sobre datos inventados.
+3. **Reconciliar con las maquetas.** Comparar las 16 pantallas construidas a ciegas con sus PNG de `docs/design-refs/`, y revisarlo todo en navegador.
+4. **Núcleo generativo con backend.** Carcasa común, autenticación real, consola del profesor (asignaturas, ingesta de PDFs, generación con linaje, corrección con "confirmar nota") consumiendo `/api/*`. Aquí entra el plugin PWA.
+5. **Migración a AWS.** Del despliegue en GitHub Pages a **S3 + CloudFront** junto al backend. Con dominio propio y reescritura de rutas desde CloudFront se podrá pasar de `HashRouter` a `BrowserRouter` y retirar `base: '/frontend_academia/'`. Esta migración es la razón para no acoplar el código a la URL de Pages.
 
 ## Estructura
 
@@ -112,7 +120,7 @@ frontend_academia/
 ├── docs/                          # inventario de pantallas y maquetas
 ├── src/
 │   ├── main.tsx                   # entrada: fuentes, HashRouter, ThemeProvider
-│   ├── app/routes.tsx             # tabla de rutas y vuelta al inicio al navegar
+│   ├── app/                       # tabla de rutas, con carga perezosa por pantalla
 │   ├── styles/globals.css         # tokens de DESIGN.md (claro/oscuro) + tema Tailwind
 │   ├── components/
 │   │   ├── ui/                    # shadcn/ui: button, input, select, card…
@@ -122,10 +130,16 @@ frontend_academia/
 │   │   ├── site-footer.tsx        # pie completo y pie reducido
 │   │   ├── scroll-to-section.tsx  # desplazamiento en la misma página
 │   │   └── theme-toggle.tsx       # sistema → claro → oscuro
-│   ├── layouts/                   # PublicLayout, AuthLayout
-│   ├── pages/                     # landing, piloto, login, recuperar, legal, 404
-│   ├── content/                   # textos provisionales por pantalla
-│   └── lib/                       # cn(), asset(), contexto y proveedor de tema
+│   │   ├── app/                   # carcasa privada: cabecera, lateral, migas, buscador
+│   │   └── skip-link.tsx          # salto al contenido
+│   ├── layouts/                   # PublicLayout, AuthLayout, AppLayout
+│   ├── pages/
+│   │   ├── app/                   # consola de profesor
+│   │   ├── centro/                # consola de institución
+│   │   └── alumno/                # consola de alumno
+│   ├── mocks/                     # types.ts es el contrato del backend; el resto, datos inventados
+│   ├── content/                   # textos y navegación por pantalla
+│   └── lib/                       # cn(), asset(), tema y contexto de asignatura
 ├── DESIGN.md
 ├── components.json                # configuración de shadcn
 ├── vite.config.ts
@@ -133,6 +147,8 @@ frontend_academia/
 ```
 
 Las pantallas no llevan textos incrustados: cada una lee su contenido de `src/content/`. Cuando llegue el backend, lo que sea dato real se sustituye ahí sin tocar la maquetación.
+
+`src/mocks/types.ts` merece atención aparte: es el **contrato que tendrá que cumplir `/api/*`**, y se queda cuando los datos inventados se borren.
 
 ## Decisiones de esta fase
 
