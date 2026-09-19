@@ -1,7 +1,9 @@
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 
+import { appRoutes } from '@/app/app-routes'
 import { LandingPage } from '@/pages/landing'
+import { CentrosPage, ProductoPage } from '@/pages/publica-v2'
 import { LegalPage } from '@/pages/legal'
 import { LoginPage } from '@/pages/login'
 import { NotFoundPage } from '@/pages/not-found'
@@ -30,17 +32,37 @@ export function AppRoutes() {
   return (
     <>
       <ScrollToTop />
-      <Routes>
+      {/* Las pantallas privadas llegan en trozos aparte. El respaldo es sobrio
+          a propósito: en local se resuelve antes de que se vea. */}
+      <Suspense
+        fallback={
+          <div
+            role="status"
+            aria-live="polite"
+            className="text-muted-foreground flex min-h-dvh items-center justify-center text-sm"
+          >
+            Cargando…
+          </div>
+        }
+      >
+        <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/piloto" element={<PilotoPage />} />
+        <Route path="/producto" element={<ProductoPage />} />
+        <Route path="/centros" element={<CentrosPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/recuperar" element={<RecuperarPage />} />
         {/* Un solo documento legal. Sin sección se abre por arriba; con
             sección se abre en ese apartado, para poder enlazarlo. */}
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/legal/:seccion" element={<LegalPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+
+        {/* Consolas privadas: profesor, institución y alumno. */}
+        {appRoutes}
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
     </>
   )
 }
