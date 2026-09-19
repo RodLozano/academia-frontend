@@ -4,9 +4,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  // GitHub Pages sirve el sitio bajo /frontend_academia/. Al migrar a
+  // GitHub Pages sirve el sitio bajo /academia-frontend/. Al migrar a
   // S3 + CloudFront con dominio propio, esto vuelve a '/'.
-  base: '/frontend_academia/',
+  base: '/academia-frontend/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

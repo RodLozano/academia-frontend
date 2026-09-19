@@ -6,7 +6,7 @@ Frontend de **AcademIA**, una plataforma educativa con IA para profesores, alumn
 >
 > Y una advertencia para quien revise: **16 de las pantallas se construyeron sin consultar su maqueta**, por una decisión explícita de priorizar cobertura sobre fidelidad. Cuáles son, y el resto de decisiones tomadas sin supervisión, está en [docs/decisiones-fase-1.md](docs/decisiones-fase-1.md).
 
-- Sitio desplegado: <https://rodlozano.github.io/frontend_academia/>
+- Sitio desplegado: <https://rodlozano.github.io/academia-frontend/>
 - Sistema visual: [DESIGN.md](DESIGN.md)
 - Inventario de páginas: [docs/inventario-pantallas.md](docs/inventario-pantallas.md)
 - Maquetas de referencia: [docs/design-refs/](docs/design-refs/), una carpeta por consola
@@ -60,8 +60,8 @@ Los nombres de token de DESIGN.md coinciden con los de shadcn/ui (`--background`
 
 Consecuencias del despliegue en GitHub Pages:
 
-- `base: '/frontend_academia/'` en `vite.config`. Los assets estáticos se referencian con `import.meta.env.BASE_URL`, nunca con rutas absolutas.
-- **`HashRouter`**, porque Pages no reescribe rutas: las URLs son `…/frontend_academia/#/login`. Por lo mismo, los anclajes internos de una página no pueden usar `#seccion`.
+- `base: '/academia-frontend/'` en `vite.config`. Los assets estáticos se referencian con `import.meta.env.BASE_URL`, nunca con rutas absolutas.
+- **`HashRouter`**, porque Pages no reescribe rutas: las URLs son `…/academia-frontend/#/login`. Por lo mismo, los anclajes internos de una página no pueden usar `#seccion`.
 - Es un repo público: **nada de secretos, claves ni datos reales** en el código, en el historial ni en variables `VITE_*` (todo lo que empieza por `VITE_` acaba en el bundle).
 
 ## Pipeline de trabajo
@@ -110,12 +110,12 @@ Las tres consolas privadas comparten una carcasa de cuatro niveles —barra glob
 2. ~~**Maqueta completa.**~~ Hecha: las 40 rutas navegables sobre datos inventados.
 3. **Reconciliar con las maquetas.** Comparar las 16 pantallas construidas a ciegas con sus PNG de `docs/design-refs/`, y revisarlo todo en navegador.
 4. **Núcleo generativo con backend.** Carcasa común, autenticación real, consola del profesor (asignaturas, ingesta de PDFs, generación con linaje, corrección con "confirmar nota") consumiendo `/api/*`. Aquí entra el plugin PWA.
-5. **Migración a AWS.** Del despliegue en GitHub Pages a **S3 + CloudFront** junto al backend. Con dominio propio y reescritura de rutas desde CloudFront se podrá pasar de `HashRouter` a `BrowserRouter` y retirar `base: '/frontend_academia/'`. Esta migración es la razón para no acoplar el código a la URL de Pages.
+5. **Migración a AWS.** Del despliegue en GitHub Pages a **S3 + CloudFront** junto al backend. Con dominio propio y reescritura de rutas desde CloudFront se podrá pasar de `HashRouter` a `BrowserRouter` y retirar `base: '/academia-frontend/'`. Esta migración es la razón para no acoplar el código a la URL de Pages.
 
 ## Estructura
 
 ```
-frontend_academia/
+academia-frontend/
 ├── .github/workflows/deploy.yml   # build + actions/deploy-pages
 ├── docs/                          # inventario de pantallas y maquetas
 ├── src/
@@ -167,14 +167,14 @@ Requisitos: la versión de Node que indica [.nvmrc](.nvmrc) y npm. El CI lee ese
 
 ```bash
 npm install
-npm run dev        # servidor de desarrollo en /frontend_academia/
+npm run dev        # servidor de desarrollo en /academia-frontend/
 npm run build      # typecheck + build de producción en dist/
 npm run preview    # sirve dist/ con el mismo base que Pages
 npm run lint
 npm run typecheck
 ```
 
-`npm run dev` sirve en `http://localhost:5173/frontend_academia/`. Al revisar una pantalla, compararla con su PNG de `docs/design-refs/` **en claro y en oscuro**, y a 1280px y 400px de ancho.
+`npm run dev` sirve en `http://localhost:5173/academia-frontend/`. Al revisar una pantalla, compararla con su PNG de `docs/design-refs/` **en claro y en oscuro**, y a 1280px y 400px de ancho.
 
 ## Publicación en GitHub Pages
 

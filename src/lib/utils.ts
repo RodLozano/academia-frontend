@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Resuelve una ruta de `public/` respetando el `base` de Vite. En GitHub Pages
- * el sitio vive bajo /frontend_academia/, así que nunca se usan rutas
+ * el sitio vive bajo /academia-frontend/, así que nunca se usan rutas
  * absolutas para los estáticos.
  */
 export function asset(path: string) {
