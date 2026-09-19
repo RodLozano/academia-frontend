@@ -67,9 +67,15 @@ La misma actividad del profesor, vista en agregado + gobierno. En v1 solo lo mí
 | 2.7 | Consumo y licencias | Uso de IA, coste de inferencia y gestión de asientos. | ⭐ interno |
 | 2.8 | Trazabilidad / auditoría | Registro de acciones y linaje de contenidos (requisito AI Act). | — |
 | 2.9 | Configuración del centro | Integraciones (Classroom/Moodle/gestión), SSO, datos y DPA. | — |
+| 2.10 | Facturación y contrato | Su plan, asientos contratados frente a usados, facturas descargables y estado de pago. **De lectura**: muestra lo que el sistema de facturación ya sabe, no emite nada. | — |
 
 *Modales/paneles:* invitar usuario; exportar informe; detalle de una alerta.
-**Total: 9 rutas (3 en v1: dashboard mínimo, usuarios y roles, consumo interno).**
+**Total: 10 rutas (3 en v1: dashboard mínimo, usuarios y roles, consumo interno).**
+
+*Sobre 2.10:* el centro ve su facturación, pero **emitir, reclamar y contabilizar
+no vive aquí**: eso es de la consola interna y de las herramientas de gestión.
+Tenerla reduce mucho soporte, porque «mándame otra vez la factura» es la
+petición que más se repite.
 
 ---
 
@@ -95,15 +101,44 @@ Ampliada respecto a la versión mínima. El valor no está en un chat abierto (e
 
 ---
 
+## Consola 4 — Interna (administración de la empresa)
+
+No es una consola del producto: es la herramienta con la que operáis el negocio.
+**Se aloja aparte** —otro repositorio y otra distribución— para poder
+restringirla por red, algo que con la aplicación de clientes no se puede hacer.
+
+> Ojo: la separación de alojamiento **no es la protección**. Un extremo de
+> administración tiene que rechazar un token que no sea de administrador venga
+> de donde venga. La restricción de red es defensa adicional, nunca la única.
+
+Aquí **no** van CRM, contabilidad ni emisión de facturas: eso se compra hecho.
+Lo único que se construye es lo que ninguna herramienta externa puede saber,
+que es cuánto consume cada institución.
+
+| # | Página | Qué es | Primer corte |
+|---|--------|--------|----|
+| 4.1 | Instituciones | Todas las cuentas, su plan y su estado. | ⭐ |
+| 4.2 | Institución (detalle) | Contrato, asientos contratados frente a usados, consumo, y activar o suspender acceso a mano. | ⭐ |
+| 4.3 | Consumo e inferencia | Coste por institución. La que dice si el precio por asiento aguanta. | ⭐ |
+| 4.4 | Pilotos activos | Días restantes y consumo de cada piloto. Un piloto quema inferencia gratis; sin vigilarlo se acumulan. | ⭐ |
+| 4.5 | Contratos y renovaciones | Vencimientos próximos y estado de renovación. | — |
+| 4.6 | Bandeja de leads | Solicitudes de piloto, hasta que haya CRM. | — |
+| 4.7 | Salud del sistema | Colas de ingesta e inferencia, y fallos. | — |
+
+**Total: 7 rutas (4 en el primer corte).**
+
+---
+
 ## Resumen
 
 | Consola | Rutas totales | Rutas en v1 |
 |---------|:---:|:---:|
 | 0 · Pública / captación | 7 | 5 |
 | 1 · Profesor | 15 | 15 |
-| 2 · Institución | 9 | 3 |
+| 2 · Institución | 10 | 3 |
 | 3 · Alumno | 8 | 4 |
-| **Total** | **39** | **27** |
+| 4 · Interna (aparte) | 7 | 4 |
+| **Total** | **48** | **31** |
 
 **La superficie del piloto (v1) son ~27 páginas**, y la consola del profesor sigue siendo el grueso (~55%) — coherente con que el piloto existe para validar el foso ahí. La consola de institución arranca casi vacía a propósito y crece en v2. El alumno gana cuerpo, pero en v1 se mantiene ceñido a lo que ancla valor (tutor, práctica y tareas); mapa de dominio, portfolio y autoevaluación esperan a v2.
 
