@@ -10,6 +10,7 @@ Frontend de **AcademIA**, una plataforma educativa con IA para profesores, alumn
 - Sistema visual: [DESIGN.md](DESIGN.md)
 - Inventario de páginas: [docs/inventario-pantallas.md](docs/inventario-pantallas.md)
 - Maquetas de referencia: [docs/design-refs/](docs/design-refs/), una carpeta por consola
+- Requisitos del backend: [academia-backend/docs/backend-requisitos.md](https://github.com/RodLozano/academia-backend/blob/main/docs/backend-requisitos.md), las 17 capacidades que piden las pantallas. Se movió allí desde este repositorio; es privado.
 
 ## Arquitectura: una PWA, cuatro lentes
 
@@ -29,7 +30,7 @@ Principios que condicionan la UI (detalle en el inventario):
 - **Toda evaluación termina en un paso humano** ("confirmar nota").
 - Las tres consolas privadas comparten una **carcasa común** (barra superior con selector de asignatura, buscador sobre el corpus, menú de usuario, avisos). La consola pública no la usa.
 
-El **backend** (FastAPI, LangGraph, Qdrant y Ollama sobre AWS) ya existe y **no forma parte de este repositorio**. El frontend lo consumirá bajo `/api/*` en fases posteriores.
+El **backend** (FastAPI, LangGraph, Qdrant y Ollama sobre AWS) **no forma parte de este repositorio**: vive en [academia-backend](https://github.com/RodLozano/academia-backend), que es privado. El frontend lo consumirá bajo `/api/*` en fases posteriores.
 
 ## Identidad visual
 
