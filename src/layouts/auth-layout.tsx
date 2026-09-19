@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ShieldCheck } from 'lucide-react'
 
 import { DemoNotice } from '@/components/brand/demo-notice'
+import { SkipLink } from '@/components/skip-link'
 import { Logo } from '@/components/brand/logo'
 import { SiteFooter } from '@/components/site-footer'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -25,6 +26,7 @@ export function AuthLayout({
 }) {
   return (
     <div className="flex min-h-dvh flex-col">
+      <SkipLink />
       <DemoNotice />
 
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
@@ -36,7 +38,8 @@ export function AuthLayout({
 
       <main
         id="contenido"
-        className="flex flex-1 flex-col items-center justify-center px-4 py-8"
+        tabIndex={-1}
+        className="flex flex-1 flex-col items-center justify-center px-4 py-8 outline-none"
       >
         <Badge variant="muted" className="mb-6">
           <ShieldCheck className="size-3" aria-hidden />

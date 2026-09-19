@@ -1,4 +1,5 @@
 import { DemoNotice } from '@/components/brand/demo-notice'
+import { SkipLink } from '@/components/skip-link'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 
@@ -19,9 +20,10 @@ export function PublicLayout({
 }) {
   return (
     <div className="flex min-h-dvh flex-col">
+      <SkipLink />
       <DemoNotice />
       {header ?? <SiteHeader />}
-      <main id="contenido" className="flex-1">
+      <main id="contenido" tabIndex={-1} className="flex-1 outline-none">
         {children}
       </main>
       <SiteFooter variant={footerVariant} />
