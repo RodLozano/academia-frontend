@@ -24,15 +24,25 @@ export function SiteHeader() {
         </Link>
 
         <nav className="text-muted-foreground ml-auto hidden items-center gap-6 text-sm lg:flex">
-          {landingNav.map((item) => (
-            <ScrollToSection
-              key={item.label}
-              section={item.section!}
-              className="hover:text-foreground transition-colors"
-            >
-              {item.label}
-            </ScrollToSection>
-          ))}
+          {landingNav.map((item) =>
+            item.to ? (
+              <Link
+                key={item.label}
+                to={item.to}
+                className="hover:text-foreground transition-colors"
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <ScrollToSection
+                key={item.label}
+                section={item.section!}
+                className="hover:text-foreground transition-colors"
+              >
+                {item.label}
+              </ScrollToSection>
+            ),
+          )}
           <Link to="/login" className="hover:text-foreground transition-colors">
             Acceso al campus
           </Link>
@@ -63,16 +73,27 @@ export function SiteHeader() {
         className="bg-card border-t lg:hidden"
       >
         <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3">
-          {landingNav.map((item) => (
-            <ScrollToSection
-              key={item.label}
-              section={item.section!}
-              onNavigate={() => setOpen(false)}
-              className="hover:bg-accent rounded-lg px-2 py-2.5 transition-colors"
-            >
-              {item.label}
-            </ScrollToSection>
-          ))}
+          {landingNav.map((item) =>
+            item.to ? (
+              <Link
+                key={item.label}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className="hover:bg-accent rounded-lg px-2 py-2.5 transition-colors"
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <ScrollToSection
+                key={item.label}
+                section={item.section!}
+                onNavigate={() => setOpen(false)}
+                className="hover:bg-accent rounded-lg px-2 py-2.5 transition-colors"
+              >
+                {item.label}
+              </ScrollToSection>
+            ),
+          )}
           <Link
             to="/login"
             className="hover:bg-accent rounded-lg px-2 py-2.5 transition-colors"

@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom'
+
 import { cn } from '@/lib/utils'
 
 /**
@@ -19,14 +21,23 @@ export function ScrollToSection({
   /** Se llama tras desplazarse, p. ej. para cerrar el menú móvil. */
   onNavigate?: () => void
 }) {
+  const navigate = useNavigate()
+
   return (
     <button
       type="button"
       onClick={() => {
         const target = document.getElementById(section)
-        target?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        if (!target) {
+          // La sección vive en la portada. Desde otra página pública
+          // (producto, precios) hay que ir allí primero.
+          navigate('/')
+          onNavigate?.()
+          return
+        }
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
         // El foco sigue al desplazamiento para quien navega con teclado.
-        target?.focus({ preventScroll: true })
+        target.focus({ preventScroll: true })
         onNavigate?.()
       }}
       className={cn('cursor-pointer text-left', className)}

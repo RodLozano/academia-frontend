@@ -15,6 +15,8 @@ export type NavItem = {
 }
 
 export const landingNav: NavItem[] = [
+  { label: 'Cómo funciona', to: '/producto' },
+  { label: 'Para centros', to: '/centros' },
   { label: 'Propuesta docente', section: 'propuesta' },
   { label: 'Gobernanza y EU AI Act', section: 'gobernanza' },
   { label: 'Rigor vs. IA genérica', section: 'diferenciacion' },
@@ -25,7 +27,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
   {
     title: 'Plataforma',
     items: [
-      { label: 'Cuaderno de evaluación' },
+      { label: 'Cómo funciona', to: '/producto' },
       { label: 'Generador de rúbricas' },
       { label: 'Trazabilidad y linaje' },
       { label: 'Conector LTI Moodle/Canvas' },
@@ -46,7 +48,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Solicitar piloto 2025/26', to: '/piloto' },
       { label: 'Acceso al campus', to: '/login' },
       { label: 'Centro legal y gobernanza', to: '/legal' },
-      { label: 'Contacto académico directo' },
+      { label: 'Modelo de licencias', to: '/centros' },
     ],
   },
 ]
