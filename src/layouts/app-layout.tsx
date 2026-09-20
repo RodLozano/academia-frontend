@@ -83,7 +83,7 @@ export function AppLayout({
       {/* Pestañas de módulo */}
       {/* Solo se fija a partir de lg: por debajo, la cabecera tiene una
           segunda fila y el desplazamiento no cuadraría. */}
-      <div className="bg-card z-30 border-b lg:sticky lg:top-16">
+      <div className="bg-brand-surface border-b-brand-line z-30 border-b lg:sticky lg:top-16">
         <div className="flex items-center gap-1 overflow-x-auto px-2">
           <Dialog open={menuAbierto} onOpenChange={setMenuAbierto}>
             <DialogTrigger asChild>
@@ -138,7 +138,7 @@ export function AppLayout({
           <AppSidebar
             modulo={moduloActivo}
             raices={RAICES}
-            className="sticky top-[7.5rem] hidden h-[calc(100dvh-7.5rem)] w-64 shrink-0 overflow-y-auto border-r p-4 lg:flex"
+            className="border-r-brand-line sticky top-[7.5rem] hidden h-[calc(100dvh-7.5rem)] w-64 shrink-0 overflow-y-auto border-r p-4 lg:flex"
           />
         )}
 

@@ -244,11 +244,11 @@ export function CuadernoPage() {
               Calificaciones de {asignatura.nombre}, {asignatura.grupo}. Cada
               nota indica su procedencia.
             </caption>
-            <thead className="bg-muted/60">
+            <thead className="bg-brand-surface border-b-brand-line border-b">
               <tr>
                 <th
                   scope="col"
-                  className="bg-muted/60 sticky left-0 px-4 py-2.5 font-medium"
+                  className="bg-brand-surface sticky left-0 px-4 py-2.5 font-medium"
                 >
                   Estudiante ({filas.length})
                 </th>
@@ -268,7 +268,7 @@ export function CuadernoPage() {
                     </span>
                   </th>
                 ))}
-                <th scope="col" className="bg-muted px-3 py-2.5 font-medium">
+                <th scope="col" className="bg-brand-surface-strong px-3 py-2.5 font-medium">
                   Final
                   <span className="text-muted-foreground block font-mono text-xs font-normal">
                     100 %
@@ -355,9 +355,9 @@ export function CuadernoPage() {
               })}
             </tbody>
 
-            <tfoot className="bg-muted/60">
+            <tfoot className="bg-brand-surface border-t-brand-line border-t">
               <tr className="border-t">
-                <th scope="row" className="bg-muted/60 sticky left-0 px-4 py-2.5 font-medium">
+                <th scope="row" className="bg-brand-surface sticky left-0 px-4 py-2.5 font-medium">
                   Media aritmética
                 </th>
                 {columnas.map((columna) => {
@@ -368,7 +368,7 @@ export function CuadernoPage() {
                     </td>
                   )
                 })}
-                <td className="bg-muted px-3 py-2.5 font-mono">
+                <td className="bg-brand-surface-strong px-3 py-2.5 font-mono">
                   {media.toFixed(2)}
                 </td>
                 <td className="text-muted-foreground px-3 py-2.5 text-xs">

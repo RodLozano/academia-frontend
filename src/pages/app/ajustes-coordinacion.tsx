@@ -63,18 +63,18 @@ export function AjustesPage() {
     <AppLayout rotulo="Panel docente" modulos={modulosProfesor}>
       <PageBar migas={[{ label: 'Configuración de materia' }, { label: 'Ajustes' }]} />
 
-      <div className="max-w-3xl p-4 lg:p-6">
+      <div className="max-w-2xl p-4 lg:p-6">
         <h1 className="text-3xl font-medium">Ajustes</h1>
         <p className="text-muted-foreground mt-1.5">
           Tu perfil, tus preferencias de evaluación y qué avisos quieres recibir.
         </p>
 
-        <Card className="mt-6 p-5">
+        <Card className="mt-10 p-6">
           <h2 className="flex items-center gap-2 font-medium">
             <User className="text-muted-foreground size-4" aria-hidden />
             Perfil
           </h2>
-          <div className="mt-4 flex items-center gap-4">
+          <div className="mt-5 flex items-center gap-4">
             <Avatar className="size-14">
               <AvatarFallback className="text-base">
                 {docente.iniciales}
@@ -93,7 +93,7 @@ export function AjustesPage() {
           </div>
         </Card>
 
-        <Card className="mt-4 p-5">
+        <Card className="mt-4 p-6">
           <h2 className="flex items-center gap-2 font-medium">
             <Sparkles className="text-primary size-4" aria-hidden />
             Asistencia del motor
@@ -102,7 +102,7 @@ export function AjustesPage() {
             El motor nunca cierra una nota: estas opciones solo deciden cuánto
             te propone.
           </p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-5 grid gap-6 sm:grid-cols-2">
             <div>
               <Label htmlFor="detalle">Detalle de la retroalimentación</Label>
               <Select defaultValue="granular">
@@ -132,12 +132,12 @@ export function AjustesPage() {
           </div>
         </Card>
 
-        <Card className="mt-4 p-5">
+        <Card className="mt-4 p-6">
           <h2 className="flex items-center gap-2 font-medium">
             <Bell className="text-muted-foreground size-4" aria-hidden />
             Avisos
           </h2>
-          <ul className="mt-4 space-y-3">
+          <ul className="mt-5 space-y-4">
             {opciones.map((opcion) => (
               <li key={opcion.clave} className="flex gap-3">
                 <Checkbox
@@ -157,7 +157,7 @@ export function AjustesPage() {
           </ul>
         </Card>
 
-        <div className="mt-4 flex justify-end gap-2">
+        <div className="mt-6 flex justify-end gap-2">
           <Button variant="ghost">Descartar</Button>
           <Button>Guardar cambios</Button>
         </div>

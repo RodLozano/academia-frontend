@@ -19,6 +19,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { modulosInstitucion } from '@/content/app-nav'
+import { cn } from '@/lib/utils'
 import { centro, direccion, facturacion, usuariosCentro } from '@/mocks/data'
 
 /** Carcasa común de la consola de institución: sin selector de asignatura. */
@@ -79,15 +80,29 @@ export function CentroDashboardPage() {
           ))}
         </dl>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+        <div className="mt-10 grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
           <Card className="p-5">
             <h2 className="font-medium">Uso mensual</h2>
             <p className="text-muted-foreground mt-1 text-xs">
               Generaciones frente a correcciones asistidas.
             </p>
-            <div className="mt-4 h-64">
+            <ul className="text-muted-foreground mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs">
+              {[
+                ['Generaciones', 'bg-chart-1'],
+                ['Correcciones', 'bg-chart-2'],
+              ].map(([etiqueta, color]) => (
+                <li key={etiqueta} className="flex items-center gap-1.5">
+                  <span
+                    className={cn('size-2 shrink-0 rounded-full', color)}
+                    aria-hidden
+                  />
+                  {etiqueta}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3 h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={centro.usoMensual}>
+                <BarChart data={centro.usoMensual} barGap={2}>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="var(--border)"
@@ -117,13 +132,13 @@ export function CentroDashboardPage() {
                   <Bar
                     dataKey="generaciones"
                     name="Generaciones"
-                    fill="var(--primary)"
+                    fill="var(--chart-1)"
                     radius={[4, 4, 0, 0]}
                   />
                   <Bar
                     dataKey="correcciones"
                     name="Correcciones"
-                    fill="var(--muted-foreground)"
+                    fill="var(--chart-2)"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
@@ -137,7 +152,7 @@ export function CentroDashboardPage() {
               <ShieldCheck className="text-human size-4" aria-hidden />
               Supervisión humana efectiva
             </h2>
-            <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+            <p className="text-muted-foreground mt-1.5 text-prose">
               Proporción de propuestas del motor que un docente modificó antes
               de firmar.
             </p>
@@ -316,7 +331,7 @@ export function CentroConsumoPage() {
           ))}
         </dl>
 
-        <h2 className="mt-8 text-xl font-medium">Reparto por facultad</h2>
+        <h2 className="mt-10 text-xl font-medium">Reparto por facultad</h2>
         <Card className="mt-3 divide-y overflow-hidden">
           {centro.consumoPorFacultad.map((facultad) => {
             const pct = Math.round(
