@@ -4,7 +4,7 @@ Frontend de **AcademIA**, una plataforma educativa con IA para profesores, alumn
 
 > **Estado:** maqueta navegable de las **40 rutas** del inventario, sin backend. Nada de lo que se ve es real: ni las personas, ni las calificaciones, ni los textos legales, ni las cifras. Los formularios validan pero no envían, y el acceso no autentica.
 >
-> Y una advertencia para quien revise: **16 de las pantallas se construyeron sin consultar su maqueta**, por una decisión explícita de priorizar cobertura sobre fidelidad. Cuáles son, y el resto de decisiones tomadas sin supervisión, está en [docs/decisiones-fase-1.md](docs/decisiones-fase-1.md).
+> Y una advertencia para quien revise: **17 de las pantallas se construyeron sin consultar su maqueta**, por una decisión explícita de priorizar cobertura sobre fidelidad. Cuáles son, y el resto de decisiones tomadas sin supervisión, está en [docs/decisiones-fase-1.md](docs/decisiones-fase-1.md) — que todavía lista 16, porque la última en llegar, facturación y contrato (2.10), no tiene maqueta que consultar.
 
 - Sitio desplegado: <https://rodlozano.github.io/academia-frontend/>
 - Sistema visual: [DESIGN.md](DESIGN.md)
@@ -81,13 +81,21 @@ Stitch  →  Figma  →  v0 / shadcn  →  Claude Code  →  GitHub Actions  →
 
 ## Qué hay construido
 
-Las 40 rutas del inventario, en cuatro consolas sobre una sola carcasa.
+Las 40 rutas del inventario, en cuatro consolas sobre una sola carcasa. Son las
+consolas 0 a 3: la consola 4 (interna, 7 rutas) vive en otro repositorio, así
+que el total de 48 del inventario no se construye aquí.
+
+El inventario cuenta **páginas**, y este README cuenta lo mismo. `app-routes.tsx`
+y `routes.tsx` registran **41** elementos `<Route>` para esas 40 páginas, porque
+el centro legal responde a dos patrones (`/legal` y `/legal/:seccion`) y es una
+sola página. Si los dos números divergen por cualquier otro motivo, falta una
+pantalla.
 
 | Consola | Rutas | Qué cubre |
 |---|---|---|
 | **0 · Pública** | 7 | Portada, cómo funciona, para centros, solicitud de piloto, acceso, recuperación y el centro legal |
 | **1 · Profesor** | 15 | Asignaturas, corpus con linaje, generadores, bandeja de evaluación, corrección, cuaderno, clases, fichas, coordinación y ajustes |
-| **2 · Institución** | 9 | Dashboard, usuarios, consumo, políticas, analítica, alertas, coordinación, auditoría y configuración |
+| **2 · Institución** | 10 | Dashboard, usuarios, consumo, políticas, analítica, alertas, coordinación, auditoría, configuración y facturación |
 | **3 · Alumno** | 8 | Inicio, tutor, práctica, tareas, mapa de dominio, materiales, autoevaluación y portfolio |
 
 Las tres consolas privadas comparten una carcasa de cuatro niveles —barra global con selector de asignatura y buscador del corpus, pestañas de módulo, secciones en la lateral y contenido—, y cada pantalla se carga en su propio trozo.

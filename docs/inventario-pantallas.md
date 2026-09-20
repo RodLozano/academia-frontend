@@ -139,7 +139,11 @@ que es cuánto consume cada institución.
 | 3 · Alumno | 8 | 4 |
 | 4 · Interna (aparte) | 7 | 4 |
 | **Total** | **48** | **31** |
+| *de las cuales, en este repositorio (consolas 0–3)* | *40* | *27* |
 
-**La superficie del piloto (v1) son ~27 páginas**, y la consola del profesor sigue siendo el grueso (~55%) — coherente con que el piloto existe para validar el foso ahí. La consola de institución arranca casi vacía a propósito y crece en v2. El alumno gana cuerpo, pero en v1 se mantiene ceñido a lo que ancla valor (tutor, práctica y tareas); mapa de dominio, portfolio y autoevaluación esperan a v2.
+La consola 4 se aloja aparte, así que **la maqueta de `academia-frontend` cubre
+40 rutas**, no 48. Es la cifra que usa el README.
+
+**La superficie del piloto (v1) son 27 páginas** en el producto, y la del profesor sigue siendo el grueso (~55%) — coherente con que el piloto existe para validar el foso ahí. La consola de institución arranca casi vacía a propósito y crece en v2. El alumno gana cuerpo, pero en v1 se mantiene ceñido a lo que ancla valor (tutor, práctica y tareas); mapa de dominio, portfolio y autoevaluación esperan a v2.
 
 **Carcasa común (no son páginas, envuelven a las tres consolas privadas):** barra superior con **selector de asignatura** (para profesor y alumno, que cursan/imparten varias), buscador sobre el corpus, menú de usuario y bandeja de avisos. Se construye en v1 porque sostiene las tres lentes sobre una sola espina de datos.
