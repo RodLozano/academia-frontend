@@ -2,7 +2,16 @@
 
 Contrato de estilo. Es la fuente de verdad del sistema visual y viaja por
 todo el pipeline (Stitch → Figma → v0/shadcn → Claude Code). Define tokens,
-no páginas. Versión 0.1 — borrador base desde cero, pendiente de validar.
+no páginas. Versión 0.2 — propuesta, **pendiente de aprobar y de sincronizar
+con la copia de `academia-admin`**.
+
+> **Qué cambia en 0.2 y por qué.** La 0.1 dejaba el teal solo en controles y
+> marca, así que en pantalla el producto se lee en blanco y negro: los
+> controles son una fracción minúscula de los píxeles. Y la densidad estaba
+> definida con dos cifras (alto de control y alto de fila) que no bastaban
+> para decidir nada. La 0.2 añade dos cosas: **superficies teal con
+> significado** y un **ritmo vertical completo**, más una paleta de gráficas
+> que hasta ahora no existía. No toca la regla del naranja.
 
 ## Principio rector
 
@@ -21,6 +30,23 @@ el humano decide):
   humano irreversible: "Confirmar nota", "Publicar", validar una salida de
   IA. No usar naranja para nada más, o pierde el significado.
 - **Neutros cálidos (stone)** en lugar de gris frío, para sesiones largas.
+
+### La intensidad también significa (0.2)
+
+El teal aparecerá mucho más a partir de 0.2, y eso solo funciona si la
+intensidad dice algo. Dice esto:
+
+| Intensidad | Qué significa | Dónde |
+|---|---|---|
+| **Teal saturado** (`--primary`) | el sistema **actúa**: púlsalo y algo pasa | botones, enlaces, pestaña activa, foco |
+| **Teal diluido** (`--brand-surface`, `--brand-line`) | **territorio** del sistema: esto lo sostiene o lo produjo la máquina | cabeceras de tabla, carcasa, estados vacíos, tintes |
+
+Saturado se pulsa; diluido no se pulsa nunca. Una superficie teal que sea
+cliqueable es un error: confunde territorio con acción.
+
+El neutro **no cambia**. Los stone cálidos siguen siendo el fondo de todo,
+porque la razón por la que se eligieron —sesiones largas, baja fatiga— no ha
+cambiado. El teal entra en zonas delimitadas, no tiñendo el lienzo.
 
 ## Tokens — modo claro
 
@@ -69,6 +95,147 @@ Profesores corrigiendo de noche; no es opcional.
 | `--warning` | `#FACC15` |
 | `--destructive` | `#F87171` |
 
+## Superficies teal (0.2)
+
+Cuatro tokens nuevos. No son una paleta nueva: son el mismo teal, diluido.
+
+| Token | Claro | Oscuro | Uso |
+|---|---|---|---|
+| `--brand-surface` | `#CCFBF1` (teal-100) | `#132E2B` | superficie de una zona del sistema |
+| `--brand-surface-strong` | `#99F6E4` (teal-200) | `#17403B` | un escalón más: hover dentro de la zona |
+| `--brand-line` | `#5EEAD4` (teal-300) | `#1F5A53` | hairline que delimita la zona |
+| `--brand-ink` | `#0F766E` | `#2DD4BF` | texto e iconos **sobre** `--brand-surface` (= `--primary`) |
+
+> **Corregido al aplicarlo (paso 2b).** La primera escala ponía el claro en
+> teal-50 / teal-100 / teal-200. Renderizado, **en claro no se veía nada**:
+> teal-50 sobre stone-50 es un tinte que el ojo no registra a tamaño de
+> pantalla completa. En oscuro, en cambio, el valor equivalente funcionaba a
+> la primera. La escala clara sube un peldaño entera; la oscura no se toca.
+> Es asimétrica a propósito: un tinte frío sobre un fondo casi blanco necesita
+> más croma que sobre uno casi negro.
+
+Contrastes medidos sobre `--brand-surface`, los dos modos: texto principal
+15,5:1 / 13,8:1 · texto secundario 6,8:1 / 5,7:1 · `--brand-ink` 4,9:1 /
+7,8:1. Todos pasan AA.
+
+**`--brand-ink` no va sobre `--brand-surface-strong`**: da 4,34:1, por debajo
+del 4,5:1 de AA para texto normal. Sobre el escalón fuerte, el texto es
+`--foreground`.
+
+**Regla del hairline.** Aun subida, `--brand-surface` se distingue del fondo
+por tono y no por claridad (1,08:1 en claro, 1,05:1 en oscuro). Es lo que se
+quiere —un tinte, no un escalón— pero implica que en escala de grises o en
+modo de alto contraste desaparece. Por eso **toda superficie teal lleva
+siempre `--brand-line`**, y la zona nunca depende solo del color para leerse.
+
+### Dónde entra el teal
+
+| Sitio | Qué recibe |
+|---|---|
+| Cabecera de tabla (`thead`) | fondo `--brand-surface`, borde inferior `--brand-line`, texto `--foreground` |
+| Barra lateral de secciones | fondo `--brand-surface`, borde derecho `--brand-line` |
+| Fila de pestañas de módulo | fondo `--brand-surface`; la pestaña activa sigue en `--primary` con su subrayado |
+| Estado vacío | superficie `--brand-surface`, borde `--brand-line`, icono `--brand-ink` |
+| Bloque producido por el motor (propuesta de nota, generado, sugerencia) | superficie `--brand-surface` + `--brand-line`, igual que el naranja marca hoy los bloques de decisión humana |
+| Cifra destacada de una tarjeta | ya va en `--primary`; se mantiene, **una sola por tarjeta** |
+| Gráficas | ver la sección siguiente |
+| Barras de progreso y medidores | relleno `--primary`, canal `--muted` |
+
+### Dónde NO entra
+
+- **Ningún botón nuevo.** El número de controles teal no sube por esta
+  revisión; lo que sube es la superficie teal.
+- Fondo de página completo, degradados, sombras de color, bordes decorativos.
+- Distintivos (`Badge`) que no signifiquen "esto lo hizo o lo sostiene el
+  sistema". Un estado neutro es `muted`, no teal.
+- La barra global de la cabecera: se queda en `--card`, o compite con la fila
+  de pestañas que tiene justo debajo.
+- El naranja. La regla del naranja no la toca esta revisión: siguen siendo
+  **exactamente cuatro controles naranjas** en todo el producto.
+
+### La prueba del significado
+
+Ante cualquier teal nuevo hay que poder terminar esta frase:
+
+> «Esto es teal porque aquí el sistema ______.»
+
+Si no se puede terminar, es decoración y se quita. Es la misma prueba que
+protege al naranja, aplicada al otro extremo de la paleta: el día que el teal
+signifique "bonito", habrá dejado de significar "el sistema".
+
+## Color en gráficas (0.2)
+
+La 0.1 no decía nada de gráficas, y el código acabó pintando una serie en
+`--primary` y la otra en `--muted-foreground`: teal contra gris, que es
+justamente el aspecto "blanco y negro" del que venimos.
+
+Todas las paletas de aquí abajo están **validadas por cálculo** (banda de
+luminosidad, suelo de croma, separación para daltonismo protan/deutan/tritan,
+suelo de visión normal y contraste contra la superficie), no elegidas a ojo.
+
+### Categórica — identidad (hasta 4 series)
+
+Orden **fijo**. La serie 1 es siempre el teal, porque en este producto la
+primera serie es casi siempre el sistema. Nunca se cicla: una quinta serie no
+inventa un tono, se pliega en «otros» o se separa en gráficas pequeñas.
+
+| Slot | Claro | Oscuro |
+|---|---|---|
+| `--chart-1` | `#0D9488` | `#0D9488` |
+| `--chart-2` | `#4338CA` | `#6366F1` |
+| `--chart-3` | `#BE185D` | `#EC4899` |
+| `--chart-4` | `#0369A1` | `#0284C7` |
+
+Condiciones que salen de la validación, y que son parte de la regla:
+
+- **3 series pasan limpio** en los dos modos.
+- **La cuarta solo en barras, líneas y áreas apiladas**, y obliga a leyenda
+  más etiquetas directas: el par 3↔4 queda en la banda 6–8 ΔE para visión
+  protan, que es legal únicamente con un segundo canal de codificación.
+- **Nunca cuatro series en dispersión, burbujas ni mapas.** Ahí se comparan
+  todos los pares contra todos, y la paleta falla. Con cuatro entidades en
+  una dispersión: se facetea.
+
+### Secuencial — magnitud (un solo tono)
+
+| Paso | Claro | Oscuro |
+|---|---|---|
+| 1 (menos) | `#14B8A6` | `#115E59` |
+| 2 | `#0D9488` | `#0F766E` |
+| 3 | `#0F766E` | `#0D9488` |
+| 4 (más) | `#134E4A` | `#2DD4BF` |
+
+El extremo claro **no puede ser más pálido que teal-500** (`#14B8A6`): por
+debajo no llega a 2:1 contra una tarjeta blanca y deja de leerse como marca.
+Es el motivo por el que `--primary` en claro (teal-700, `#0F766E`) **no sirve
+como color de marca de gráfica**: cae por debajo del suelo de croma y se lee
+como gris. El teal de la UI y el teal de las gráficas son escalones distintos
+del mismo tono, a propósito.
+
+### Reglas que no dependen de la paleta
+
+1. **Un solo eje.** Nunca dos escalas verticales. Dos medidas de magnitud
+   distinta son dos gráficas, o una serie indexada a una base común.
+2. **El color sigue a la entidad, nunca a su posición.** Filtrar series no
+   repinta a las que quedan.
+3. **Los colores de estado están reservados.** `--success`, `--warning` y
+   `--destructive` no se reutilizan como "serie 4", y siempre van con icono y
+   etiqueta, nunca solo color.
+4. **El naranja en una gráfica solo si la serie *es* el acto humano** (notas
+   ratificadas, tasa de modificación). Nunca como cuarto color disponible.
+5. **Rejilla y ejes recesivos**: `--border` para la rejilla, sin línea de eje
+   vertical, texto de eje en `--muted-foreground` a 12px.
+6. **El texto lleva tokens de texto, no el color de la serie.** La marca de
+   color al lado basta para la identidad.
+7. **Leyenda siempre con dos o más series**, y etiqueta directa cuando son
+   cuatro o menos. Una serie sola no lleva leyenda: la lleva el título.
+   **En el mismo orden que las marcas**, y la leyenda se escribe en HTML, no
+   con el componente de la librería de gráficas: Recharts ordena por registro
+   interno —que no es el de pintado— y pinta el texto con el color de la
+   serie, que es justo lo que prohíbe la regla 6.
+8. **Capa de hover por defecto**: cursor con tooltip en línea y área, tooltip
+   por marca en barra y punto.
+
 ## Tipografía
 
 - **Inter** (variable) — interfaz, cuerpo y datos. Todo el producto. Elegida
@@ -90,16 +257,101 @@ Profesores corrigiendo de noche; no es opcional.
 | xl | 18 / 26 |
 | 2xl | 20 / 28 |
 | 3xl | 24 / 32 |
+| prose *(0.2)* | 14 / 22 |
 
 Dos pesos: 400 regular, 500 medio. Nada de 600/700 en UI.
 La escala de marketing es aparte y mayor.
 
-## Densidad — "cómoda-compacta"
+`prose` es nuevo en 0.2 y existe solo para los párrafos explicativos, que en
+este producto son largos y abundantes (nota de cumplimiento, por qué una
+cifra importa, qué no hace una pantalla). El mismo tamaño que `base` con dos
+píxeles más de interlineado. La UI —etiquetas, celdas, controles— sigue en
+`base` 14/20: ahí el interlineado extra solo separaría cosas que van juntas.
 
-- Unidad base 4px; ritmo en múltiplos de 8.
-- Altura de control por defecto 40px; compacto 32px (barras y tablas).
-- Fila de tabla 40px por defecto, 36px en modo compacto.
-- Formularios con más aire que las tablas.
+## Densidad — "cómoda-compacta" (reescrita en 0.2)
+
+La 0.1 decía "control 40, compacto 32, fila 40". Medido en el navegador, el
+producto real usa **32px en casi todos los controles** y filas de **57–61px**.
+O sea: las filas ya tenían aire y los controles no, y el documento no describía
+ninguna de las dos cosas. La sensación de densidad no viene del alto de fila,
+viene de que todo control es compacto y de que las secciones se tocan.
+
+Unidad base 4px; ritmo en múltiplos de 8, salvo los pasos de 12 y 20.
+
+### Alturas de control
+
+| Control | 0.1 | 0.2 |
+|---|---|---|
+| Botón y campo por defecto | 40px | **40px** (sin cambio) |
+| Compacto | 32px | **36px** |
+| Grande (una sola llamada a la acción por página) | 48px | 48px (sin cambio) |
+
+Lo que de verdad cambia no es el número, es **dónde se permite el compacto**:
+solo en barras de acciones y dentro de celdas de tabla. Un formulario, una
+tarjeta o un estado vacío usan siempre la altura por defecto. Si una pantalla
+no tiene ni barra ni tabla, no debería tener ni un control compacto.
+
+### Filas y celdas
+
+| Medida | 0.2 |
+|---|---|
+| Fila de tabla, una línea | **48px** mínimo |
+| Fila de tabla con avatar o dos líneas | **56px** |
+| Cabecera de tabla | **40px**, sobre `--brand-surface` |
+| Relleno de celda | 12px vertical · 16px en la primera columna, 12px en el resto |
+
+### Ritmo vertical
+
+Seis pasos con nombre. Se usa el paso, no un número suelto.
+
+| Paso | px | Entre qué |
+|---|---|---|
+| hair | 4 | icono ↔ su etiqueta |
+| tight | 8 | etiqueta ↔ su control |
+| item | 12 | hermanos de una lista o de una rejilla de tarjetas |
+| block | 16 | titular ↔ el contenido que encabeza |
+| group | 24 | campos de un formulario entre sí |
+| section | **40** | secciones de una página (era 24–32) |
+
+### Relleno
+
+| Contenedor | 0.2 |
+|---|---|
+| Página | 16px por debajo de `lg`, 24px a partir de `lg` |
+| Tarjeta | 20px por defecto · **24px si contiene un formulario** · 16px si es una ficha de cifra |
+| Estado vacío | 32px vertical, y centrado |
+
+### Cuánto aire gana un formulario frente a una tabla
+
+Es la pregunta que la 0.1 dejaba en "más aire" sin cifrar. La respuesta:
+
+| | Alto por dato |
+|---|---|
+| Fila de tabla | 48px |
+| Fila de formulario (etiqueta 8px + control 40px + pista 6px + 24px hasta el siguiente) | **~88px** |
+
+**Un formulario ocupa alrededor de 1,8 veces lo que una tabla por cada dato.**
+Si un formulario cabe en la misma altura por fila que una tabla, está mal
+maquetado. Y al revés: una tabla con 88px por fila está desperdiciando la
+pantalla en la que el profesor pasa el día.
+
+Anchos que acompañan a esa proporción:
+
+- Formulario a una columna: **máximo 640px**. Un campo de texto a 1280px de
+  ancho es ilegible y es lo que hace que un formulario parezca un panel.
+- Prosa explicativa: **máximo 68 caracteres**.
+- Tabla: todo el ancho disponible. Es la única cosa que lo merece.
+
+### Presupuesto por pantalla
+
+- Como mucho **una fila de cifras y una tabla densa** por pantalla. Si hacen
+  falta dos tablas, la segunda va a una pestaña.
+- Fila de cifras: **4 fichas como máximo** a partir de 1280px, 2 a partir de
+  640px, 1 por debajo. Y una sola cifra destacada dentro de cada ficha.
+- **Ninguna pantalla desborda en horizontal a 400px.** Una tabla ancha se
+  desplaza dentro de su contenedor, y ese contenedor lleva `position:
+  relative` si dentro hay algo `sr-only` (si no, el elemento absoluto se
+  ancla al bloque inicial y arrastra la página entera).
 
 ## Radio y elevación
 
@@ -152,3 +404,15 @@ serif usan **600**, y solo ellos: es la única excepción, va atada a la clase
 4. Sentence case en todo (botones, títulos, etiquetas).
 5. Todo token nuevo se añade aquí primero; los componentes solo consumen
    tokens, no hex sueltos.
+6. *(0.2)* Teal saturado se pulsa; teal diluido no se pulsa nunca. Una
+   superficie `--brand-surface` cliqueable es un error.
+7. *(0.2)* Toda superficie teal va acompañada de `--brand-line`. El tinte
+   solo no basta para delimitar una zona.
+8. *(0.2)* Un teal nuevo tiene que poder completar «esto es teal porque aquí
+   el sistema ___». Si no, es decoración y se quita.
+9. *(0.2)* Las opacidades sueltas (`bg-primary/5`, `border-primary/30`) se
+   sustituyen por los tokens de superficie. Una opacidad se comporta distinto
+   sobre stone cálido que sobre la tarjeta oscura, y era la vía por la que el
+   teal entraba sin decidirlo nadie.
+10. *(0.2)* Ninguna paleta de gráfica se elige a ojo: se valida (banda de
+    luminosidad, croma, daltonismo, contraste) antes de entrar aquí.
