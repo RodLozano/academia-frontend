@@ -13,6 +13,7 @@ import '@fontsource-variable/jetbrains-mono'
 import './styles/globals.css'
 
 import { AppRoutes } from '@/app/routes'
+import { SubjectProvider } from '@/lib/subject-provider'
 import { ThemeProvider } from '@/lib/theme-provider'
 
 const container = document.getElementById('root')
@@ -25,7 +26,11 @@ createRoot(container).render(
     {/* HashRouter, no BrowserRouter: GitHub Pages no reescribe rutas. */}
     <HashRouter>
       <ThemeProvider>
-        <AppRoutes />
+        {/* Por encima de las rutas: las páginas leen la asignatura en su
+            propio cuerpo, antes de montar la carcasa. */}
+        <SubjectProvider>
+          <AppRoutes />
+        </SubjectProvider>
       </ThemeProvider>
     </HashRouter>
   </StrictMode>,

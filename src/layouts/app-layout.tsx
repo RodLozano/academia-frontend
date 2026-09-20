@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { PanelLeft, ShieldCheck } from 'lucide-react'
 
@@ -13,9 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { SubjectContext } from '@/lib/subject-context'
 import { cn } from '@/lib/utils'
-import { asignaturas as todasAsignaturas, docente } from '@/mocks/data'
+import { docente } from '@/mocks/data'
 import type { NavModulo } from '@/content/app-nav'
 import { notaCumplimiento } from '@/content/app-nav'
 import type { Persona } from '@/mocks/types'
@@ -56,17 +55,7 @@ export function AppLayout({
   children: React.ReactNode
 }) {
   const { pathname } = useLocation()
-  const [asignaturaId, setAsignaturaId] = useState(todasAsignaturas[0].id)
   const [menuAbierto, setMenuAbierto] = useState(false)
-
-  const asignatura =
-    todasAsignaturas.find((item) => item.id === asignaturaId) ??
-    todasAsignaturas[0]
-
-  const subject = useMemo(
-    () => ({ asignatura, asignaturas: todasAsignaturas, setAsignaturaId }),
-    [asignatura],
-  )
 
   // El módulo activo es el de prefijo más largo que casa con la ruta, para que
   // /app/generar/examen active "Generador" y no "Cuaderno".
@@ -79,106 +68,104 @@ export function AppLayout({
       ) ?? modulos[0]
 
   return (
-    <SubjectContext.Provider value={subject}>
-      <div className="flex min-h-dvh flex-col">
-        {/* Las pantallas privadas muestran nombres de alumnos y notas
-            inventados, y el repositorio es público: se declara igual que en la
-            consola pública. */}
+    <div className="flex min-h-dvh flex-col">
+      {/* Las pantallas privadas muestran nombres de alumnos y notas
+          inventados, y el repositorio es público: se declara igual que en la
+          consola pública. */}
       <SkipLink />
-        <DemoNotice />
-        <AppHeader
-          persona={persona}
-          rotulo={rotulo}
-          conAsignatura={conAsignatura}
-        />
+      <DemoNotice />
+      <AppHeader
+        persona={persona}
+        rotulo={rotulo}
+        conAsignatura={conAsignatura}
+      />
 
-        {/* Pestañas de módulo */}
-        {/* Solo se fija a partir de lg: por debajo, la cabecera tiene una
-            segunda fila y el desplazamiento no cuadraría. */}
-        <div className="bg-card z-30 border-b lg:sticky lg:top-16">
-          <div className="flex items-center gap-1 overflow-x-auto px-2">
-            <Dialog open={menuAbierto} onOpenChange={setMenuAbierto}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className={cn('shrink-0', conLateral && 'lg:hidden')}
-                  aria-label="Abrir secciones"
-                >
-                  <PanelLeft className="size-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogDrawer className="max-w-xs">
-                <DialogTitle className="sr-only">Secciones</DialogTitle>
-                <AppSidebar
-                  modulo={moduloActivo}
-                  raices={RAICES}
-                  className="min-h-full"
-                />
-              </DialogDrawer>
-            </Dialog>
+      {/* Pestañas de módulo */}
+      {/* Solo se fija a partir de lg: por debajo, la cabecera tiene una
+          segunda fila y el desplazamiento no cuadraría. */}
+      <div className="bg-card z-30 border-b lg:sticky lg:top-16">
+        <div className="flex items-center gap-1 overflow-x-auto px-2">
+          <Dialog open={menuAbierto} onOpenChange={setMenuAbierto}>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className={cn('shrink-0', conLateral && 'lg:hidden')}
+                aria-label="Abrir secciones"
+              >
+                <PanelLeft className="size-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogDrawer className="max-w-xs">
+              <DialogTitle className="sr-only">Secciones</DialogTitle>
+              <AppSidebar
+                modulo={moduloActivo}
+                raices={RAICES}
+                className="min-h-full"
+              />
+            </DialogDrawer>
+          </Dialog>
 
-            {modulos.map((modulo) => {
-              const activo = modulo.base === moduloActivo.base
-              return (
-                <Link
-                  key={modulo.base}
-                  to={modulo.base}
-                  aria-current={activo ? 'page' : undefined}
-                  className={cn(
-                    'hover:text-foreground relative shrink-0 px-3 py-3 whitespace-nowrap transition-colors',
-                    activo
-                      ? 'text-primary font-medium'
-                      : 'text-muted-foreground',
-                  )}
-                >
-                  {modulo.label}
-                  {activo && (
-                    <span
-                      className="bg-primary absolute inset-x-2 bottom-0 h-0.5 rounded-t"
-                      aria-hidden
-                    />
-                  )}
-                </Link>
-              )
-            })}
-          </div>
+          {modulos.map((modulo) => {
+            const activo = modulo.base === moduloActivo.base
+            return (
+              <Link
+                key={modulo.base}
+                to={modulo.base}
+                aria-current={activo ? 'page' : undefined}
+                className={cn(
+                  'hover:text-foreground relative shrink-0 px-3 py-3 whitespace-nowrap transition-colors',
+                  activo
+                    ? 'text-primary font-medium'
+                    : 'text-muted-foreground',
+                )}
+              >
+                {modulo.label}
+                {activo && (
+                  <span
+                    className="bg-primary absolute inset-x-2 bottom-0 h-0.5 rounded-t"
+                    aria-hidden
+                  />
+                )}
+              </Link>
+            )
+          })}
         </div>
-
-        <div className="flex flex-1 items-start">
-          {conLateral && (
-            <AppSidebar
-              modulo={moduloActivo}
-              raices={RAICES}
-              className="sticky top-[7.5rem] hidden h-[calc(100dvh-7.5rem)] w-64 shrink-0 overflow-y-auto border-r p-4 lg:flex"
-            />
-          )}
-
-          <main id="contenido" tabIndex={-1} className="min-w-0 flex-1 outline-none">
-            {children}
-          </main>
-        </div>
-
-        <footer className="bg-muted/40 text-muted-foreground border-t text-xs">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
-            <p className="flex items-center gap-1.5">
-              <ShieldCheck className="text-primary size-3.5" aria-hidden />
-              AcademIA · {notaCumplimiento}
-            </p>
-            <nav className="ml-auto flex flex-wrap gap-x-4">
-              <Link to="/legal/privacidad" className="hover:text-foreground">
-                Privacidad
-              </Link>
-              <Link to="/legal/ai-act" className="hover:text-foreground">
-                Auditoría de sesgo
-              </Link>
-              <Link to="/legal" className="hover:text-foreground">
-                Centro legal
-              </Link>
-            </nav>
-          </div>
-        </footer>
       </div>
-    </SubjectContext.Provider>
+
+      <div className="flex flex-1 items-start">
+        {conLateral && (
+          <AppSidebar
+            modulo={moduloActivo}
+            raices={RAICES}
+            className="sticky top-[7.5rem] hidden h-[calc(100dvh-7.5rem)] w-64 shrink-0 overflow-y-auto border-r p-4 lg:flex"
+          />
+        )}
+
+        <main id="contenido" tabIndex={-1} className="min-w-0 flex-1 outline-none">
+          {children}
+        </main>
+      </div>
+
+      <footer className="bg-muted/40 text-muted-foreground border-t text-xs">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+          <p className="flex items-center gap-1.5">
+            <ShieldCheck className="text-primary size-3.5" aria-hidden />
+            AcademIA · {notaCumplimiento}
+          </p>
+          <nav className="ml-auto flex flex-wrap gap-x-4">
+            <Link to="/legal/privacidad" className="hover:text-foreground">
+              Privacidad
+            </Link>
+            <Link to="/legal/ai-act" className="hover:text-foreground">
+              Auditoría de sesgo
+            </Link>
+            <Link to="/legal" className="hover:text-foreground">
+              Centro legal
+            </Link>
+          </nav>
+        </div>
+      </footer>
+    </div>
   )
 }
