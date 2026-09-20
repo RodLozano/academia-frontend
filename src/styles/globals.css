@@ -40,6 +40,29 @@
   --destructive-foreground: #ffffff; /* derivado */
   --overlay: rgb(28 25 23 / 0.45); /* velo de modal */
   --radius: 0.5rem;
+
+  /* Superficies teal (DESIGN.md 0.2). Teal diluido = territorio del sistema;
+     nunca se pulsa. Toda superficie va con --brand-line: el tinte tiene la
+     misma luminancia que el fondo y sin el filete no delimita nada. */
+  --brand-surface: #f0fdfa; /* teal-50 */
+  --brand-surface-strong: #ccfbf1; /* teal-100 */
+  --brand-line: #99f6e4; /* teal-200 */
+  --brand-ink: #0f766e; /* = --primary, texto sobre superficie teal */
+
+  /* Gráficas: categórica de orden fijo, la 1 es siempre el sistema.
+     Validada (luminosidad, croma, daltonismo, contraste). La cuarta solo en
+     barras/líneas y con leyenda; nunca cuatro en dispersión. */
+  --chart-1: #0d9488;
+  --chart-2: #4338ca;
+  --chart-3: #be185d;
+  --chart-4: #0369a1;
+
+  /* Secuencial de un solo tono. El extremo claro no baja de teal-500: por
+     debajo no llega a 2:1 contra una tarjeta y deja de leerse como marca. */
+  --chart-scale-1: #14b8a6;
+  --chart-scale-2: #0d9488;
+  --chart-scale-3: #0f766e;
+  --chart-scale-4: #134e4a;
 }
 
 .dark {
@@ -72,6 +95,24 @@
   --destructive-foreground: #450a0a; /* derivado */
   /* El fondo oscuro ya es stone-900: el velo tiene que ser más oscuro que él. */
   --overlay: rgb(0 0 0 / 0.65);
+
+  /* Superficies teal en oscuro: escalones propios, no una inversión. */
+  --brand-surface: #132e2b;
+  --brand-surface-strong: #17403b;
+  --brand-line: #1f5a53;
+  --brand-ink: #2dd4bf; /* = --primary en oscuro */
+
+  /* La serie 1 no cambia de modo: #0d9488 valida contra las dos superficies. */
+  --chart-1: #0d9488;
+  --chart-2: #6366f1;
+  --chart-3: #ec4899;
+  --chart-4: #0284c7;
+
+  /* En oscuro la rampa va al revés: el extremo "más" es el teal claro. */
+  --chart-scale-1: #115e59;
+  --chart-scale-2: #0f766e;
+  --chart-scale-3: #0d9488;
+  --chart-scale-4: #2dd4bf;
 }
 
 @theme inline {
@@ -103,6 +144,18 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-overlay: var(--overlay);
+  --color-brand-surface: var(--brand-surface);
+  --color-brand-surface-strong: var(--brand-surface-strong);
+  --color-brand-line: var(--brand-line);
+  --color-brand-ink: var(--brand-ink);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-scale-1: var(--chart-scale-1);
+  --color-chart-scale-2: var(--chart-scale-2);
+  --color-chart-scale-3: var(--chart-scale-3);
+  --color-chart-scale-4: var(--chart-scale-4);
 
   /* Radio: 8px en controles (rounded-lg), 12px en tarjetas (rounded-xl). */
   --radius-sm: calc(var(--radius) - 4px);
@@ -135,6 +188,11 @@
   --text-2xl--line-height: 1.75rem;
   --text-3xl: 1.5rem; /* 24 / 32 */
   --text-3xl--line-height: 2rem;
+
+  /* Solo para párrafos explicativos, que aquí son largos y abundantes. La UI
+     —etiquetas, celdas, controles— sigue en `base` 14/20. */
+  --text-prose: 0.875rem; /* 14 / 22 */
+  --text-prose--line-height: 1.375rem;
 
   /* Escala de marketing — aparte y mayor (DESIGN.md). */
   --text-display-sm: 1.75rem; /* 28 / 36 */
