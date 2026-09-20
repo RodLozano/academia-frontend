@@ -19,7 +19,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { modulosInstitucion } from '@/content/app-nav'
-import { centro, direccion, usuariosCentro } from '@/mocks/data'
+import { centro, direccion, facturacion, usuariosCentro } from '@/mocks/data'
 
 /** Carcasa común de la consola de institución: sin selector de asignatura. */
 function CentroLayout({ children }: { children: React.ReactNode }) {
@@ -304,7 +304,9 @@ export function CentroConsumoPage() {
         <dl className="mt-6 grid gap-3 sm:grid-cols-3">
           {[
             ['Generaciones del periodo', totalGeneraciones.toLocaleString('es-ES')],
-            ['Asientos asignados', `${totalAsientos} / 60`],
+            // El denominador sale del contrato (2.10), no de una constante:
+            // las dos pantallas tienen que decir lo mismo.
+            ['Asientos asignados', `${totalAsientos} / ${facturacion.asientosContratados}`],
             ['Inferencia en la UE', '100 %'],
           ].map(([label, valor]) => (
             <Card key={label} className="p-4">

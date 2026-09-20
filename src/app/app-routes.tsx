@@ -127,6 +127,10 @@ const CentroConfiguracionPage = perezosa(
   () => import('@/pages/centro/v2'),
   'CentroConfiguracionPage',
 )
+const CentroFacturacionPage = perezosa(
+  () => import('@/pages/centro/v2'),
+  'CentroFacturacionPage',
+)
 const AlumnoDominioPage = perezosa(
   () => import('@/pages/alumno/v2'),
   'AlumnoDominioPage',
@@ -180,6 +184,7 @@ export const appRoutes = [
   <Route key="/centro/coordinacion" path="/centro/coordinacion" element={<CentroCoordinacionPage />} />,
   <Route key="/centro/auditoria" path="/centro/auditoria" element={<CentroAuditoriaPage />} />,
   <Route key="/centro/configuracion" path="/centro/configuracion" element={<CentroConfiguracionPage />} />,
+  <Route key="/centro/facturacion" path="/centro/facturacion" element={<CentroFacturacionPage />} />,
   <Route key="/alumno/dominio" path="/alumno/dominio" element={<AlumnoDominioPage />} />,
   <Route key="/alumno/materiales" path="/alumno/materiales" element={<AlumnoMaterialesPage />} />,
   <Route key="/alumno/autoevaluacion" path="/alumno/autoevaluacion" element={<AlumnoAutoevaluacionPage />} />,

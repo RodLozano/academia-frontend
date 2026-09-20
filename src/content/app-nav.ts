@@ -122,6 +122,14 @@ export const modulosInstitucion: NavModulo[] = [
           { label: 'Configuración del centro', to: '/centro/configuracion', icon: 'Settings2' },
         ],
       },
+      {
+        // Facturación no es gobierno: es lo que el centro paga. Va en su
+        // propio grupo para no hacerla pasar por cumplimiento.
+        titulo: 'Contrato',
+        items: [
+          { label: 'Facturación y contrato', to: '/centro/facturacion', icon: 'Receipt' },
+        ],
+      },
     ],
   },
 ]

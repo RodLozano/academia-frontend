@@ -687,3 +687,29 @@ export const usuariosCentro = [
   { id: 'u-5', nombre: 'Dra. Sofía Landa', correo: 's.landa@ejemplo.edu', rol: 'Dirección', facultad: 'Humanidades', estado: 'activo' as const },
   { id: 'u-6', nombre: 'Dr. Bruno Sáez', correo: 'b.saez@ejemplo.edu', rol: 'Profesor', facultad: 'Derecho', estado: 'suspendido' as const },
 ]
+
+/**
+ * Facturación y contrato (2.10). Es una vista **de lectura**: refleja lo que
+ * el sistema de facturación ya sabe. Emitir, reclamar y contabilizar vive en
+ * la consola interna, no aquí; por eso no hay ninguna acción que cambie nada.
+ */
+export const facturacion = {
+  plan: 'Institucional anual',
+  periodo: '1 sep 2024 – 31 ago 2025',
+  renovacion: '1 sep 2025',
+  /** Renovación tácita salvo preaviso; el preaviso se pide por correo. */
+  preaviso: '60 días',
+  asientosContratados: 60,
+  precioAsiento: 18,
+  importeAnual: 1080,
+  moneda: 'EUR',
+  formaPago: 'Transferencia a 30 días',
+  facturacionA: 'Universidad de ejemplo · ESQ0000000A',
+  contacto: 'administracion@ejemplo.edu',
+  facturas: [
+    { id: 'F-2025-0118', concepto: 'Asientos institucionales · 1.er trimestre 2025', emitida: '2025-01-07', vence: '2025-02-06', importe: 270, estado: 'pagada' as const },
+    { id: 'F-2024-0961', concepto: 'Asientos institucionales · 4.º trimestre 2024', emitida: '2024-10-04', vence: '2024-11-03', importe: 270, estado: 'pagada' as const },
+    { id: 'F-2025-0204', concepto: 'Asientos institucionales · 2.º trimestre 2025', emitida: '2025-04-03', vence: '2025-05-03', importe: 270, estado: 'pendiente' as const },
+    { id: 'F-2024-0742', concepto: 'Alta y puesta en marcha', emitida: '2024-09-02', vence: '2024-10-02', importe: 450, estado: 'pagada' as const },
+  ],
+}

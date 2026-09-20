@@ -13,10 +13,13 @@ import {
   AlertTriangle,
   CalendarRange,
   Check,
+  CreditCard,
   Download,
   FileSearch,
+  FileText,
   Network,
   Plug,
+  Receipt,
   ScrollText,
   Settings2,
   ShieldCheck,
@@ -45,12 +48,19 @@ import {
 } from '@/components/ui/select'
 import { modulosInstitucion } from '@/content/app-nav'
 import { cn } from '@/lib/utils'
-import { alumnos, asignaturas, centro, direccion } from '@/mocks/data'
+import {
+  alumnos,
+  asignaturas,
+  centro,
+  direccion,
+  facturacion,
+} from '@/mocks/data'
 
 /**
  * Consola de institución, rutas de v2. El inventario las difiere a propósito:
- * en v1 la institución solo necesita «ver que controla», y estas seis son el
- * gobierno de verdad.
+ * en v1 la institución solo necesita «ver que controla». Seis de las siete
+ * son el gobierno de verdad; la séptima, facturación y contrato, es
+ * administrativa y se explica en su propio comentario.
  *
  * Todas comparten un rasgo: la institución mira **en agregado**. Ninguna de
  * estas pantallas debe permitir a dirección tocar la nota de un alumno
@@ -646,6 +656,209 @@ export function CentroConfiguracionPage() {
             .
           </p>
         </Card>
+      </div>
+    </CentroLayout>
+  )
+}
+
+/**
+ * Facturación y contrato (2.10). La única pantalla de esta consola que no es
+ * de gobierno: el centro ve su plan, sus asientos y sus facturas.
+ *
+ * Es **de lectura**, y eso es la decisión de diseño, no una limitación de la
+ * maqueta: emitir, reclamar y contabilizar vive en la consola interna y en
+ * las herramientas de gestión. Aquí no hay un solo control que cambie el
+ * contrato. Existe porque «mándame otra vez la factura» es la petición de
+ * soporte que más se repite, y atenderla sola cuesta cero.
+ *
+ * Los asientos usados se derivan del mismo reparto por facultad que pinta
+ * «Consumo y licencias»: son la misma cifra vista dos veces, y si divergieran
+ * el centro no sabría a cuál creer.
+ */
+export function CentroFacturacionPage() {
+  const asientosUsados = centro.consumoPorFacultad.reduce(
+    (n, f) => n + f.asientos,
+    0,
+  )
+  const ocupacion = Math.round(
+    (asientosUsados / facturacion.asientosContratados) * 100,
+  )
+  const asientosLibres = facturacion.asientosContratados - asientosUsados
+  const pendientes = facturacion.facturas.filter((f) => f.estado === 'pendiente')
+
+  const euros = (n: number) =>
+    n.toLocaleString('es-ES', {
+      style: 'currency',
+      currency: facturacion.moneda,
+      maximumFractionDigits: 0,
+    })
+
+  const estadoFactura = {
+    pagada: { variant: 'success' as const, label: 'Pagada' },
+    pendiente: { variant: 'muted' as const, label: 'Pendiente' },
+  }
+
+  // Más recientes primero: quien entra aquí busca la última factura.
+  const facturas = [...facturacion.facturas].sort((a, b) =>
+    b.emitida.localeCompare(a.emitida),
+  )
+
+  return (
+    <CentroLayout>
+      <PageBar
+        migas={[{ label: 'Gobierno del centro' }, { label: 'Facturación' }]}
+        estado={{ label: 'De lectura', variant: 'muted' }}
+      />
+
+      <div className="p-4 lg:p-6">
+        <h1 className="flex items-center gap-2.5 text-3xl font-medium">
+          <Receipt className="text-muted-foreground size-6" aria-hidden />
+          Facturación y contrato
+        </h1>
+        <p className="text-muted-foreground mt-1.5 max-w-2xl">
+          Su plan, los asientos contratados frente a los usados y las facturas
+          del periodo. Esta pantalla muestra lo que el sistema de facturación
+          ya sabe; no emite nada.
+        </p>
+
+        <div className="mt-6 grid gap-3 lg:grid-cols-3">
+          <Card className="p-5">
+            <h2 className="flex items-center gap-2 font-medium">
+              <FileText className="text-muted-foreground size-4" aria-hidden />
+              Plan contratado
+            </h2>
+            <p className="text-primary mt-3 text-xl font-medium">
+              {facturacion.plan}
+            </p>
+            <dl className="mt-3 space-y-1.5 text-sm">
+              {[
+                ['Periodo', facturacion.periodo],
+                ['Renovación', facturacion.renovacion],
+                ['Preaviso de baja', facturacion.preaviso],
+                ['Precio por asiento', `${euros(facturacion.precioAsiento)} / año`],
+              ].map(([label, valor]) => (
+                <div key={label} className="flex justify-between gap-3">
+                  <dt className="text-muted-foreground">{label}</dt>
+                  <dd className="text-right">{valor}</dd>
+                </div>
+              ))}
+            </dl>
+          </Card>
+
+          <Card className="p-5">
+            <h2 className="flex items-center gap-2 font-medium">
+              <Users className="text-muted-foreground size-4" aria-hidden />
+              Asientos
+            </h2>
+            <p className="mt-3">
+              <span className="text-primary font-mono text-4xl">
+                {asientosUsados}
+              </span>
+              <span className="text-muted-foreground font-mono text-xl">
+                {' / '}
+                {facturacion.asientosContratados}
+              </span>
+            </p>
+            <Progress value={ocupacion} className="mt-3" />
+            <p className="text-muted-foreground mt-3 text-sm">
+              {asientosLibres} asientos libres · {ocupacion} % de ocupación.
+            </p>
+            <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
+              Un asiento se ocupa al activar a una persona, no al invitarla.
+              Ampliar el contrato se pide a administración.
+            </p>
+          </Card>
+
+          <Card className="p-5">
+            <h2 className="flex items-center gap-2 font-medium">
+              <CreditCard className="text-muted-foreground size-4" aria-hidden />
+              Estado de pago
+            </h2>
+            <p className="mt-3">
+              <Badge variant={pendientes.length ? 'muted' : 'success'}>
+                {pendientes.length === 0
+                  ? 'Al corriente'
+                  : pendientes.length === 1
+                    ? '1 factura pendiente'
+                    : `${pendientes.length} facturas pendientes`}
+              </Badge>
+            </p>
+            <dl className="mt-3 space-y-1.5 text-sm">
+              {[
+                ['Importe anual', euros(facturacion.importeAnual)],
+                ['Forma de pago', facturacion.formaPago],
+                ['Se factura a', facturacion.facturacionA],
+              ].map(([label, valor]) => (
+                <div key={label}>
+                  <dt className="text-muted-foreground">{label}</dt>
+                  <dd>{valor}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="text-muted-foreground mt-3 text-xs">
+              Dudas de facturación:{' '}
+              <span className="font-mono">{facturacion.contacto}</span>
+            </p>
+          </Card>
+        </div>
+
+        <h2 className="mt-8 text-xl font-medium">Facturas</h2>
+        {/* `relative` no es decorativo: la cabecera de la última columna lleva
+            un rótulo `sr-only`, que se posiciona en absoluto. Sin un ancestro
+            posicionado se ancla al bloque inicial, no al contenedor con
+            scroll, y arrastra la página entera a scroll horizontal a 400px. */}
+        <div className="relative mt-3 overflow-x-auto rounded-xl border">
+          <table className="w-full min-w-3xl border-collapse text-left">
+            <thead className="bg-muted/60">
+              <tr>
+                <th scope="col" className="px-4 py-2.5 font-medium">Número</th>
+                <th scope="col" className="px-3 py-2.5 font-medium">Concepto</th>
+                <th scope="col" className="px-3 py-2.5 font-medium">Emitida</th>
+                <th scope="col" className="px-3 py-2.5 font-medium">Vencimiento</th>
+                <th scope="col" className="px-3 py-2.5 text-right font-medium">Importe</th>
+                <th scope="col" className="px-3 py-2.5 font-medium">Estado</th>
+                <th scope="col" className="px-3 py-2.5 font-medium">
+                  <span className="sr-only">Descargar</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {facturas.map((factura) => (
+                <tr key={factura.id} className="border-t">
+                  <td className="px-4 py-3 font-mono text-xs">{factura.id}</td>
+                  <td className="px-3 py-3">{factura.concepto}</td>
+                  <td className="text-muted-foreground px-3 py-3 font-mono text-xs">
+                    {factura.emitida}
+                  </td>
+                  <td className="text-muted-foreground px-3 py-3 font-mono text-xs">
+                    {factura.vence}
+                  </td>
+                  <td className="px-3 py-3 text-right font-mono">
+                    {euros(factura.importe)}
+                  </td>
+                  <td className="px-3 py-3">
+                    <Badge variant={estadoFactura[factura.estado].variant}>
+                      {estadoFactura[factura.estado].label}
+                    </Badge>
+                  </td>
+                  <td className="px-3 py-3">
+                    <Button variant="outline" size="sm" className="shrink-0">
+                      <Download className="size-4" />
+                      <span className="sr-only sm:not-sr-only">PDF</span>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="text-muted-foreground mt-4 max-w-2xl text-xs leading-relaxed">
+          Aquí no se emiten facturas, no se reclaman impagos y no se cambia el
+          contrato: eso lo hace administración con sus propias herramientas. Lo
+          que el centro necesita del producto es poder consultarlo y
+          descargarlo sin abrir un ticket.
+        </p>
       </div>
     </CentroLayout>
   )
